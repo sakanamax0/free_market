@@ -1,0 +1,21 @@
+.header {
+    display: flex;
+    align-items: center;
+    /* 垂直方向の中央揃え */
+    padding: 10px;
+    /* ヘッダーの余白 */
+    background-color: #f8f9fa;
+    /* 背景色（任意） */
+}
+
+.logo {
+    margin-right: auto;
+    /* 左端に配置 */
+}
+
+.logo img {
+    max-height: 50px;
+    /* ロゴの高さを調整 */
+    width: auto;
+    /* 横幅は自動調整 */
+}

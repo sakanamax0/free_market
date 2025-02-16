@@ -1,0 +1,93 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* ヘッダー */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #000;
+    color: #fff;
+    padding: 10px 20px;
+}
+
+.header__logo img {
+    height: 40px;
+}
+
+.header__search input {
+    width: 300px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.header__nav a {
+    color: #fff;
+    margin-left: 15px;
+    text-decoration: none;
+}
+
+.header__nav .btn-sell {
+    background-color: red;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #fff;
+}
+
+/* メニュー部分 */
+.menu {
+    display: flex;
+    border-bottom: 2px solid #ccc;
+    margin: 0 20px;
+}
+
+.menu__tab {
+    margin-right: 20px;
+    padding: 10px;
+    text-decoration: none;
+    color: #333;
+}
+
+.menu__tab--active {
+    color: red;
+    font-weight: bold;
+}
+
+/* 商品一覧部分 */
+.products {
+    padding: 20px;
+}
+
+.no-products {
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+}
+
+.products__list {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.product {
+    width: 30%;
+    text-align: center;
+}
+
+.product__image img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    background-color: #ccc;
+    object-fit: cover;
+}
+
+.product__name {
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 14px;
+}

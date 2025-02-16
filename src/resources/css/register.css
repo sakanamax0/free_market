@@ -1,0 +1,25 @@
+.header {
+    display: flex;
+    align-items: center;
+    
+    padding: 10px;
+    
+    background-color: #f8f9fa;
+   
+}
+
+.logo {
+    margin-right: auto;
+    
+}
+
+.logo img {
+    display: block;
+    
+    max-height: 50px;
+   
+    width: auto;
+    
+    margin: 0;
+   
+}
