@@ -40,4 +40,4 @@ MySQL 8.0.26
 
 nginx 1.21.1
 
-![ER図](free_market.drawio.svg)
+![ER図](free_market.drawio.png)
