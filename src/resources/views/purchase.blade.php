@@ -3,167 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>商品購入</title>
-    <style>
-        /* 必要に応じてスタイルを追加 */
-    </style>
-    <script src="https://js.stripe.com/v3/"></script> <!-- Stripe.jsを読み込む -->
+    <title>購入手続き</title>
+    <link rel="stylesheet" href="{{ asset('/css/purchase.css') }}">
 </head>
 <body>
-    <header class="header">
-        <div class="header__logo">
-            <img src="{{ asset('images/logo.png') }}" alt="COACHTECHロゴ">
-        </div>
-        <div class="header__search">
-            <form method="GET" action="{{ route('index') }}">
-                <input type="text" name="keyword" placeholder="商品名で検索" value="{{ request('keyword') }}">
-                <button type="submit">検索</button>
-            </form>
-        </div>
-        <nav class="header__nav">
-            @auth
-                <a href="{{ route('logout') }}">ログアウト</a>
-                <a href="{{ route('mypage') }}">マイページ</a>
-                <a href="{{ route('sell.index') }}" class="btn-sell">出品</a>
-            @else
-                <a href="{{ route('login') }}">ログイン</a>
-            @endauth
-        </nav>
-    </header>
+    @include('components.header')
 
-    <div class="content">
-        <div class="image">
-            <img src="{{ $item->img_url }}" alt="{{ $item->name }}" width="300">
-        </div>
-        <div>
-            <h2>{{ $item->name }}</h2>
-            <p>¥{{ number_format($item->price) }}</p>
-            
-            @if ($item->sold_out)
-                <p style="color: red; font-weight: bold;">この商品は売り切れです。</p>
-            @endif
-        </div>
-    </div>
+    <div class="container">
+        <form class="buy" action="{{ route('purchase.purchase', ['item_id' => $item->id]) }}" method="post">
+            <div class="buy__left">
+                <div class="item">
+                    <div class="item__img">
+                        <img src="{{ \Storage::url($item->img_url) }}" alt="">
+                    </div>
+                    <div class="item__info">
+                        <h3 class="item__name">{{ $item->name }}</h3>
+                        <p class="item__price">¥ {{ number_format($item->price) }}</p>
+                    </div>
+                </div>
 
-    <div>
-        <h3>支払い方法</h3>
-        <select id="payment-method">
-            <option value="" disabled selected>支払い方法を選択してください</option>
-            <option value="コンビニ払い">コンビニ払い</option>
-            <option value="カード払い">カード払い</option>
-        </select>
-    </div>
+                <div class="purchases">
+                    <div class="purchase">
+                        <div class="purchase__flex">
+                            <h3 class="purchase__title">支払い方法</h3>
+                        </div>
+                        <select class="purchase__value" id="payment" name="payment_method" required>
+                            <option value="konbini">コンビニ払い</option>
+                            <option value="card">クレジットカード払い</option>
+                        </select>
+                    </div>
 
-    <div> 
-        <h3>配送先</h3> 
-        @if ($address && $address->zipcode && $address->details) 
-            <p>〒{{ $address->zipcode }}</p> 
-            <p>{{ $address->details }}</p> 
-            @if ($address->building) 
-                <p>{{ $address->building }}</p> 
-            @endif 
-        @else 
-            <p>配送先情報がありません。</p> 
-        @endif 
-        <a href="{{ route('address.edit', $item->id) }}" class="button-link">変更する</a> 
-    </div> 
+                    <div class="purchase">
+                        <div class="purchase__flex">
+                            <h3 class="purchase__title">配送先</h3>
+                            <a href="{{ route('purchase.address', ['item_id' => $item->id]) }}">
+                                <button type="button">変更する</button>
+                            </a>
+                        </div>
+                        <div class="purchase__value">
+                            <label>〒 <input class="input_destination" name="destination_postcode" value="{{ $user->profile->postcode }}" readonly></label><br>
+                            <input class="input_destination" name="destination_address" value="{{ $user->profile->address }}" readonly><br>
+                            @if (!empty($user->profile->building))
+                            <input class="input_destination" name="destination_building" value="{{ $user->profile->building }}" readonly>
+                            @else
+                            <input class="input_destination" name="destination_building" placeholder="建物名（任意）" readonly>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <div class="sidebar">
-        <h3>商品代金の内訳</h3>
-        <p>商品代金: ¥{{ number_format($item->price) }}</p>
-        <p>支払い方法: <span id="selected-method">未選択</span></p>
-        
-        <!-- カード情報入力欄 -->
-        <div id="card-element"></div>
-        <div id="card-errors" role="alert"></div>
+            <div class="buy__right">
+                <div class="buy__info">
+                    <table>
+                        <tr>
+                            <th class="table__header">商品代金</th>
+                            <td id="item__price" class="table__data" value="{{ $item->price }}">¥ {{ number_format($item->price) }}</td>
+                        </tr>
+                        <tr>
+                            <th class="table__header">支払い方法</th>
+                            <td id="pay_confirm" class="table__data">
+                                {{ old('payment_method') === 'card' ? 'クレジットカード払い' : 'コンビニ払い' }}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
 
-        <!-- 売り切れの商品に対して購入ボタンを無効化 -->
-        @if ($item->sold_out)
-            <button class="button-red" id="submit-button" disabled>購入できません</button>
-        @else
-            <button class="button-red" id="submit-button">購入する</button>
-        @endif
+                @csrf
+                @if ($item->sold())
+                    <button class="btn disable" disabled>売り切れました</button>
+                @elseif ($item->mine())
+                    <button class="btn disable" disabled>購入できません</button>
+                @else
+                    <button type="submit" class="btn">購入する</button>
+                @endif
+            </div>
+        </form>
     </div>
 
     <script>
-        const stripe = Stripe('{{ env('STRIPE_PUBLIC_KEY') }}');
-        const elements = stripe.elements();
-        const card = elements.create('card');
-        card.mount('#card-element');
+        const paymentSelect = document.getElementById('payment');
+        const paymentDisplay = document.getElementById('pay_confirm');
 
-        const paymentMethod = document.getElementById('payment-method');
-        const selectedMethod = document.getElementById('selected-method');
-
-        paymentMethod.addEventListener('change', () => {
-            selectedMethod.textContent = paymentMethod.value;
-        });
-
-        document.getElementById('submit-button').addEventListener('click', async (event) => {
-            event.preventDefault();
-
-            const method = paymentMethod.value;
-            if (!method) {
-                alert('支払い方法を選択してください。');
-                return;
-            }
-
-            // コンビニ支払いを選択した場合、Stripe決済画面に遷移しない
-            if (method === 'コンビニ払い') {
-                alert('コンビニ支払いが選択されました。Stripe決済は使用しません。');
-                
-                // コンビニ支払いのダミー処理
-                fetch('{{ route("purchase.complete") }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        item_id: '{{ $item->id }}',
-                        payment_method: method,
-                        stripe_token: 'dummy_token' // ダミートークンを送信
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('購入が完了しました！（コンビニ払い）');
-                        window.location.href = '{{ route("index") }}'; // index.blade.php に遷移
-                    } else {
-                        alert('購入に失敗しました。もう一度お試しください。');
-                    }
-                });
-
-                return; // コンビニ支払いの場合はここで処理を終了
-            }
-
-            // Stripeトークンを作成（カード支払いの場合）
-            const {token, error} = await stripe.createToken(card);
-            if (error) {
-                document.getElementById('card-errors').textContent = error.message;
-            } else {
-                fetch('{{ route("purchase.complete") }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        item_id: '{{ $item->id }}',
-                        payment_method: method,
-                        stripe_token: token.id
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('購入が完了しました！（カード払い）');
-                        window.location.href = '{{ route("index") }}'; // index.blade.php に遷移
-                    } else {
-                        alert('購入に失敗しました。もう一度お試しください。');
-                    }
-                });
-            }
+        paymentSelect.addEventListener('change', () => {
+            const selected = paymentSelect.value === 'card' ? 'クレジットカード払い' : 'コンビニ払い';
+            paymentDisplay.textContent = selected;
         });
     </script>
 </body>

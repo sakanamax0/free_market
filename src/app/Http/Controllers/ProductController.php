@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Like;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -18,20 +19,37 @@ class ProductController extends Controller
     // 商品出品フォーム表示
     public function create()
     {
-        // sell/index.blade.php ビューを返す
         return view('sell.index');
     }
 
-    // 商品一覧ページ表示
+    // 商品一覧ページ表示（おすすめ / マイリスト）
     public function index(Request $request)
     {
-        // 商品を全て取得
-        $items = Product::all();  // ここで全商品を取得
+        $tab = $request->query('tab'); // ?tab=mylist など
 
         if ($tab === 'mylist') {
-        // ユーザーのマイリストに関連する商品を取得する場合（仮に）
-        $items = auth()->user()->myListItems(); // マイリストに関連するメソッドが必要
-    }
-        return view('auth.index', compact('items'));  // 取得した商品データをビューに渡す
+            // マイリスト（いいねした商品）
+            $user = Auth::user();
+
+            if (!$user) {
+                return redirect()->route('login');
+            }
+
+            $likedProductIds = Like::where('user_id', $user->id)->pluck('item_id');
+            $items = Product::whereIn('id', $likedProductIds)
+                ->with('orders') // sold_out 判定用
+                ->get();
+
+        } else {
+            // おすすめ（全商品）
+            $items = Product::with('orders')->get();
+        }
+
+        // 売り切れ判定を追加
+        foreach ($items as $item) {
+            $item->sold_out = $item->orders()->exists();
+        }
+
+        return view('auth.index', compact('items'));
     }
 }

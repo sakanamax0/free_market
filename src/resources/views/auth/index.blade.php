@@ -14,20 +14,28 @@
             <img src="{{ asset('images/logo.png') }}" alt="COACHTECHロゴ">
         </div>
         <div class="header__search">
-            <form method="GET" action="{{ route('index') }}">
-                <input type="text" name="keyword" placeholder="商品名で検索" value="{{ request('keyword') }}">
-                <button type="submit">検索</button>
-            </form>
+        <form method="GET" action="{{ route('index') }}">
+    <input type="text" name="keyword" placeholder="商品名で検索" value="{{ request('keyword') }}">
+    <input type="hidden" name="tab" value="{{ request('tab', 'recommend') }}">
+    <button type="submit">検索</button>
+</form>
+
         </div>
-        <nav class="header__nav">
-            @auth
-                <a href="{{ route('logout') }}">ログアウト</a>
-                <a href="{{ route('mypage') }}">マイページ</a>
-                <a href="{{ route('sell.index') }}" class="btn-sell">出品</a>
-            @else
-                <a href="{{ route('login') }}">ログイン</a>
-            @endauth
-        </nav>
+    <nav class="header__nav">
+        @auth
+            <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                @csrf
+                <button type="submit" style="background: none; border: none; color: #007bff; padding: 0; cursor: pointer; text-decoration: underline;">
+                    ログアウト
+                </button>
+            </form>
+            <a href="{{ route('mypage') }}">マイページ</a>
+            <a href="{{ route('sell.index') }}" class="btn-sell">出品</a>
+        @else
+            <a href="{{ route('login') }}">ログイン</a>
+        @endauth
+    </nav>
+
     </header>
 
     <main class="products">
@@ -48,25 +56,24 @@
                 <p class="no-products">現在マイリストはありません</p>
             @else
                 <div class="products__list">
-                    @foreach($items as $item)
-                        <a href="{{ route('item.show', ['item_id' => $item->id]) }}" class="product-link">
-                            <div class="product" style="position: relative;">
-                                <div class="product__image">
-                                    <img src="{{ $item->img_url }}" alt="商品画像">
-                                    <!-- 商品が売り切れの場合に "SOLD OUT" を表示 -->
-                                    @if ($item->sold_out)
-                                        <div class="sold-out-overlay">
-                                            <span>SOLD OUT</span>
-                                        </div>
-                                    @endif
-                                </div>
-                                <div class="product__name">
-                                    {{ $item->name }}
-                                </div>
-                                <p>¥{{ number_format($item->price) }}</p>
-                            </div>
-                        </a>
-                    @endforeach
+                @foreach($items as $item)
+    <a href="{{ route('item.show', ['item_id' => $item->id]) }}" class="product-link">
+        <div class="product" style="position: relative;">
+            <div class="product__image">
+                <img src="{{ $item->image_url }}" alt="商品画像">
+                @if ($item->sold_out)
+                    <div class="sold-out-overlay">
+                        <span>SOLD OUT</span>
+                    </div>
+                @endif
+            </div>
+            <div class="product__name">
+                {{ $item->name }}
+            </div>
+            <p>¥{{ number_format($item->price) }}</p>
+        </div>
+    </a>
+@endforeach
                 </div>
             @endif
         @else
@@ -76,7 +83,7 @@
                     <a href="{{ route('item.show', ['item_id' => $item->id]) }}" class="product-link">
                         <div class="product" style="position: relative;">
                             <div class="product__image">
-                                <img src="{{ $item->img_url }}" alt="商品画像">
+                                <img src="{{ $item->image_url }}" alt="商品画像">
                                 <!-- 商品が売り切れの場合に "SOLD OUT" を表示 -->
                                 @if ($item->sold_out)
                                     <div class="sold-out-overlay">

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $item->name }}</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         body { font-family: Arial, sans-serif; line-height: 1.6; }
         .container { display: flex; margin: 20px; }
@@ -89,9 +90,8 @@
             .then(response => response.json())
             .then(data => {
                 const likeButton = document.getElementById('like-button');
-                const likeCount = likeButton.querySelector('span');
                 likeButton.classList.toggle('liked', data.liked);
-                likeCount.textContent = data.likesCount;
+                likeButton.innerHTML = `❤️ いいね (${data.likesCount})`;
             });
         });
     </script>

@@ -18,14 +18,19 @@
             </form>
         </div>
         <nav class="header__nav">
-            @auth
-                <a href="{{ route('logout') }}">ログアウト</a>
-                <a href="{{ route('mypage') }}">マイページ</a>
-                <a href="{{ route('sell.index') }}" class="btn-sell">出品</a>
-            @else
-                <a href="{{ route('login') }}">ログイン</a>
-            @endauth
-        </nav>
+        @auth
+            <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                @csrf
+                <button type="submit" style="background: none; border: none; color: #007bff; padding: 0; cursor: pointer; text-decoration: underline;">
+                    ログアウト
+                </button>
+            </form>
+            <a href="{{ route('mypage') }}">マイページ</a>
+            <a href="{{ route('sell.index') }}" class="btn-sell">出品</a>
+        @else
+            <a href="{{ route('login') }}">ログイン</a>
+        @endauth
+    </nav>
     </header>
     <main>
         <h1>商品の出品</h1>

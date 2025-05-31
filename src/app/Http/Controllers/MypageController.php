@@ -7,6 +7,11 @@ use Illuminate\Support\Facades\Auth;
 
 class MypageController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth'); // 🔒 ログイン必須にする
+    }
+
     // マイページの表示
     public function index()
     {
@@ -28,11 +33,13 @@ class MypageController extends Controller
     // プロフィール編集画面の表示
     public function edit()
     {
+        $user = Auth::user();
+
         $userData = [
-            'username' => '既存の値が入力されている',
-            'postal_code' => '既存の値が入力されている',
-            'address' => '既存の値が入力されている',
-            'building' => '既存の値が入力されている',
+            'username' => $user->username ?? '',
+            'postal_code' => $user->postal_code ?? '',
+            'address' => $user->address ?? '',
+            'building' => $user->building ?? '',
         ];
 
         return view('mypage.profile', compact('userData'));
@@ -48,10 +55,15 @@ class MypageController extends Controller
             'building' => 'nullable|string|max:255',
         ]);
 
-        // 更新処理（仮）
-        // $user = Auth::user();
-        // $user->update($request->all());
+        $user = Auth::user();
 
-        return redirect()->route('mypage.index')->with('success', 'プロフィールを更新しました');
+        // ユーザー情報を更新
+        $user->username = $request->username;
+        $user->postal_code = $request->postal_code;
+        $user->address = $request->address;
+        $user->building = $request->building;
+        $user->save();
+
+        return redirect()->route('mypage')->with('success', 'プロフィールを更新しました');
     }
 }

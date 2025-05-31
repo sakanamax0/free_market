@@ -26,12 +26,12 @@ Route::get('/goods/{id}', [ProductController::class, 'show'])->name('goods.show'
 Route::get('/sell', [ProductController::class, 'create'])->name('sell.index'); // 出品ページ表示
 Route::post('/sell', [SellController::class, 'store'])->name('sell.store'); // 出品処理
 
-// 商品一覧ページ追加
-Route::get('/products', [ProductController::class, 'index'])->name('products.index'); // 商品一覧表示
+// 商品一覧ページ（ItemControllerに移行）
+Route::get('/products', [ItemController::class, 'index'])->name('products.index');
 
 // 購入関連
 Route::get('/purchase/{itemId}', [PurchaseController::class, 'show'])->name('purchase.show');
-Route::post('/purchase', [PurchaseController::class, 'complete'])->name('purchase.complete');
+Route::post('/purchase/{item_id}', [PurchaseController::class, 'purchase'])->name('purchase.purchase');
 
 // ユーザー登録関連
 Route::get('/register', [RegisterController::class, 'show'])->name('register');
@@ -46,10 +46,12 @@ Route::post('/item/{item_id}/toggle-like', [ItemController::class, 'toggleLike']
 Route::get('/purchase/address/{item_id}', [AddressController::class, 'edit'])->name('address.edit');
 Route::post('/purchase/address/{item_id}', [AddressController::class, 'update'])->name('address.update');
 
-// マイページ関連
-Route::get('/mypage', [MypageController::class, 'index'])->name('mypage');
-Route::get('/mypage/profile', [MypageController::class, 'edit'])->name('mypage.edit');
-Route::post('/mypage/profile', [MypageController::class, 'update'])->name('mypage.update');
+// マイページ関連（authミドルウェア追加）
+Route::middleware('auth')->group(function () {
+    Route::get('/mypage', [MypageController::class, 'index'])->name('mypage');
+    Route::get('/mypage/profile', [MypageController::class, 'edit'])->name('mypage.edit');
+    Route::post('/mypage/profile', [MypageController::class, 'update'])->name('mypage.update');
+});
 
 // その他のルート
 Route::get('/search', [ItemController::class, 'search'])->name('search');
