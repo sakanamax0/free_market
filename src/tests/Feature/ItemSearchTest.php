@@ -58,4 +58,20 @@ class ItemSearchTest extends TestCase
         $response->assertDontSee('Samsung Galaxy');
         $response->assertDontSee('Apple AirPods');
     }
+
+    /** @test */
+public function watchで検索したときにAppleWatchだけが出る()
+{
+    $response = $this->get(route('index', [
+        'keyword' => 'watch',
+        'tab' => 'recommend',
+    ]));
+
+    $response->assertStatus(200);
+    $response->assertSee('Apple Watch');
+    $response->assertDontSee('Apple iPhone');
+    $response->assertDontSee('Samsung Galaxy');
+    $response->assertDontSee('Apple AirPods');
+}
+
 }

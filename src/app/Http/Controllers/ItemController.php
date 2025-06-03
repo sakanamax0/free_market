@@ -105,9 +105,7 @@ class ItemController extends Controller
 
     public function search(Request $request)
     {
-        // index() にキーワード検索機能があるため、
-        // もし使わないなら削除検討してください。
-
+        
         $keyword = $request->input('keyword');
 
         $items = Item::where('name', 'like', "%{$keyword}%")
