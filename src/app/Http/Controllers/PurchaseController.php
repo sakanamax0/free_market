@@ -37,7 +37,7 @@ class PurchaseController extends Controller
             return redirect()->route('index')->with('error', 'この商品はすでに売り切れです。');
         }
 
-        $stripe = new StripeClient(config('stripe.stripe_secret_key'));
+        $stripe = new StripeClient(config('services.stripe.secret'));
 
         [
             $user_id,
@@ -67,14 +67,7 @@ class PurchaseController extends Controller
                 'quantity' => 1,
             ]],
             'mode' => 'payment',
-            'success_url' => route('purchase.success', [
-                'item_id' => $item_id,
-                'user_id' => $user_id,
-                'amount' => $amount,
-                'sending_postcode' => $sending_postcode,
-                'sending_address' => $sending_address,
-                'sending_building' => $sending_building,
-            ]),
+            'success_url' => "http://localhost/purchase/{$item_id}/success?user_id={$user_id}&amount={$amount}&sending_postcode={$sending_postcode}&sending_address={$sending_address}&sending_building={$sending_building}",
         ]);
 
         return redirect($checkout_session->url);
@@ -96,7 +89,7 @@ class PurchaseController extends Controller
             return redirect('/')->with('error', 'この商品はすでに購入済みです。');
         }
 
-        $stripe = new StripeClient(config('stripe.stripe_secret_key'));
+        $stripe = new StripeClient(config('services.stripe.secret'));
         $stripe->charges->create([
             'amount' => $request->amount,
             'currency' => 'jpy',
@@ -108,7 +101,7 @@ class PurchaseController extends Controller
             'item_id' => $item_id,
             'sending_postcode' => $request->sending_postcode,
             'sending_address' => urldecode($request->sending_address),
-            'sending_building' => $request->sending_building ? urldecode($request->sendingsending_building) : null,
+            'sending_building' => $request->sending_building ? urldecode($request->sending_building) : null,
         ]);
 
         $item->sold_out = true;

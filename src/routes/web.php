@@ -32,6 +32,8 @@ Route::get('/products', [ItemController::class, 'index'])->name('products.index'
 // 購入関連
 Route::get('/purchase/{item_id}', [PurchaseController::class, 'index'])->name('purchase.index');
 Route::post('/purchase/{item_id}', [PurchaseController::class, 'purchase'])->name('purchase.purchase');
+Route::get('/purchase/{item_id}/success', [PurchaseController::class, 'success'])->name('purchase.success');
+
 
 // ユーザー登録関連
 Route::get('/register', [RegisterController::class, 'show'])->name('register');
