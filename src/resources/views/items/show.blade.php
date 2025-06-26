@@ -54,7 +54,7 @@
 
             <p><strong>商品状態:</strong> {{ $item->condition }}</p>
             <p><strong>商品説明:</strong> {{ $item->description }}</p>
-            <a href="{{ route('purchase.show', $item->id) }}" class="button">購入手続きへ</a>
+            <a href="{{ route('purchase.index', $item->id) }}" class="button">購入手続きへ</a>
         </div>
     </div>
 
