@@ -1,43 +1,59 @@
-環境構築
+# 環境構築手順
 
-Dockerビルド
+## 1. Dockerビルド
 
+```bash
 git clone git@github.com:sakanamax0/free_market00.git
+docker-compose up -d --build
+```
 
-docker-compose up-d-build
+## 2. Laravel環境構築
 
-Laravel境構築
-
-dockar-compose exec php bash
-
-composer Install
-
-cp envexample env、環境変数を適宣変更
-
-php artisan key generate
-
+```bash
+docker-compose exec php bash
+composer install
+cp .env.example .env
+# .envファイルの環境変数を適宜変更してください
+php artisan key:generate
 php artisan migrate
-
 php artisan db:seed
+```
 
-開発環境
+## 3. 開発環境アクセス
 
-お問い合わせ：http://localhost/
+- お問い合わせページ  
+  http://localhost/
 
-ユーザー登録：http://localhost/register
+- ユーザー登録ページ  
+  http://localhost/register
 
-phpMyAdmin:http://localhost:8080/
+- phpMyAdmin  
+  http://localhost:8080/
 
-使用技術(実行環境)
+---
 
-PHP 8.2.11
+## 一般ユーザーログイン情報
 
-Laravel 8.83.8
+```markdown
+| 種別       | メールアドレス       | パスワード |
+|------------|----------------------|------------|
+| 一般ユーザー | test@gmail.com        | password   |
+```
 
-jquery 3.7.1.min.js
+---
 
-MySQL 8.0.26
+## 使用技術・実行環境
 
-nginx 1.21.1
+| 技術     | バージョン   |
+|----------|--------------|
+| PHP      | 8.2.11       |
+| Laravel  | 8.83.8       |
+| jQuery   | 3.7.1.min.js |
+| MySQL    | 8.0.26       |
+| nginx    | 1.21.1       |
+
+---
+
+## ER図
 
 ![ER図](free_market.drawio.png)
