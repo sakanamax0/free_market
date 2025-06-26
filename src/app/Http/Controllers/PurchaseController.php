@@ -5,11 +5,10 @@ namespace App\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\AddressRequest;
 use App\Models\Item;
 use App\Models\User;
 use App\Models\SoldItem;
-use App\Models\Profile;
+use App\Models\Address;
 use Stripe\StripeClient;
 
 class PurchaseController extends Controller
@@ -26,7 +25,9 @@ class PurchaseController extends Controller
         }
 
         $user = Auth::user();
-        return view('purchase', compact('item', 'user'));
+        $address = Address::where('user_id', $user->id)->first();
+
+        return view('purchase', compact('item', 'user', 'address'));
     }
 
     // Stripe Checkoutを使った支払い処理
@@ -107,30 +108,12 @@ class PurchaseController extends Controller
             'item_id' => $item_id,
             'sending_postcode' => $request->sending_postcode,
             'sending_address' => urldecode($request->sending_address),
-            'sending_building' => $request->sending_building ? urldecode($request->sending_building) : null,
+            'sending_building' => $request->sending_building ? urldecode($request->sendingsending_building) : null,
         ]);
 
         $item->sold_out = true;
         $item->save();
 
         return redirect('/')->with('flashSuccess', '決済が完了しました！');
-    }
-
-    // ユーザーの住所入力画面表示
-    public function address($item_id, Request $request){
-        $user = Auth::user();
-        return view('address', compact('user', 'item_id'));
-    }
-
-    // ユーザー住所更新
-    public function updateAddress(AddressRequest $request){
-        $user = Auth::user();
-        Profile::where('user_id', $user->id)->update([
-            'postcode' => $request->postcode,
-            'address' => $request->address,
-            'building' => $request->building
-        ]);
-
-        return redirect()->route('purchase.index', ['item_id' => $request->item_id]);
     }
 }

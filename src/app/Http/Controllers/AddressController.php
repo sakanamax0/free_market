@@ -34,7 +34,7 @@ class AddressController extends Controller
             ]
         );
 
-        return redirect()->route('purchase.show', ['item_id' => $item_id])
+        return redirect()->route('purchase.index', ['item_id' => $item_id])
             ->with('success', '住所が更新されました。');
     }
 }

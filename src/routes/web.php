@@ -30,7 +30,7 @@ Route::post('/sell', [SellController::class, 'store'])->name('sell.store'); // �
 Route::get('/products', [ItemController::class, 'index'])->name('products.index');
 
 // 購入関連
-Route::get('/purchase/{itemId}', [PurchaseController::class, 'show'])->name('purchase.show');
+Route::get('/purchase/{item_id}', [PurchaseController::class, 'index'])->name('purchase.index');
 Route::post('/purchase/{item_id}', [PurchaseController::class, 'purchase'])->name('purchase.purchase');
 
 // ユーザー登録関連
