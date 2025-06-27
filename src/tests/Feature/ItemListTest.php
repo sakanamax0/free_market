@@ -39,20 +39,19 @@ class ItemListTest extends TestCase
 
     public function test_購入済み商品は_SOLDと表示される()
     {
-        $user = User::factory()->create(); // ← ユーザーを先に作成
-        $item = Item::factory()->create(['is_sold' => true]);
-    
+        $user = User::factory()->create();
+        $item = Item::factory()->create(['sold_out' => true]);
+
         // sold_items テーブルにレコードを追加（user_id が必須）
-        \App\Models\SoldItem::create([
+        SoldItem::create([
             'item_id' => $item->id,
             'user_id' => $user->id,
         ]);
 
         $this->actingAs($user);
-    
+
         $response = $this->get('/products?tab=recommend');
-    
-        $response->assertSee('SOLD');
+
+        $response->assertSee('SOLD OUT');
     }
-    
 }

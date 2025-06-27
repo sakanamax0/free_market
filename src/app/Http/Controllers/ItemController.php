@@ -78,17 +78,14 @@ class ItemController extends Controller
         } else {
             $query = Item::query();
 
-            if (Auth::check()) {
+            if (!is_null($userId)) {
                 // 自分の出品商品を除外
                 $query->where('seller_id', '!=', $userId);
-
-                // 購入済み商品を除外
-                $soldItemIds = SoldItem::where('user_id', $userId)->pluck('item_id')->toArray();
-                if (!empty($soldItemIds)) {
-                    $query->whereNotIn('id', $soldItemIds);
-                }
             }
-
+            \Log::info('ItemController@index called');
+            \Log::info('SQL: '.$query->toSql());
+            \Log::info('Bindings: '.json_encode($query->getBindings()));
+            
             if ($keyword) {
                 $query->where('name', 'LIKE', '%' . $keyword . '%');
             }
@@ -105,7 +102,6 @@ class ItemController extends Controller
 
     public function search(Request $request)
     {
-        
         $keyword = $request->input('keyword');
 
         $items = Item::where('name', 'like', "%{$keyword}%")
