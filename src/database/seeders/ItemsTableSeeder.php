@@ -94,7 +94,7 @@ class ItemsTableSeeder extends Seeder
         ];
 
         foreach ($items as $data) {
-            // item 作成
+            
             $item = Item::create([
                 'name' => $data['name'],
                 'price' => $data['price'],
@@ -103,7 +103,7 @@ class ItemsTableSeeder extends Seeder
                 'condition' => $data['condition'],
             ]);
 
-            // カテゴリを名前から取得して attach
+            
             $categoryIds = Category::whereIn('name', $data['category_names'])->pluck('id')->toArray();
             $item->categories()->attach($categoryIds);
         }

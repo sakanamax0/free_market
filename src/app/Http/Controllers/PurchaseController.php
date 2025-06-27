@@ -13,7 +13,7 @@ use Stripe\StripeClient;
 
 class PurchaseController extends Controller
 {
-    // 商品購入ページ（住所確認）表示
+    
     public function index($item_id, Request $request){
         if (!Auth::check()) {
             return redirect()->route('login')->with('error', 'ログインが必要です。');
@@ -30,7 +30,7 @@ class PurchaseController extends Controller
         return view('purchase', compact('item', 'user', 'address'));
     }
 
-    // Stripe Checkoutを使った支払い処理
+    
     public function purchase($item_id, Request $request){
         $item = Item::findOrFail($item_id);
         if ($item->sold_out) {
@@ -73,7 +73,7 @@ class PurchaseController extends Controller
         return redirect($checkout_session->url);
     }
 
-    // Stripe決済完了後の処理
+    
     public function success($item_id, Request $request){
         if (
             !$request->user_id ||

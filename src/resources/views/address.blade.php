@@ -41,17 +41,17 @@
             @csrf
             <div class="form-group">
                 <label for="zipcode">郵便番号</label>
-                <!-- 郵便番号を表示する際、$addressがnullの場合は空文字をデフォルトに設定 -->
+                
                 <input type="text" id="zipcode" name="zipcode" value="{{ old('zipcode', optional($address)->zipcode) }}" required>
             </div>
             <div class="form-group">
                 <label for="details">住所</label>
-                <!-- 住所を表示する際、$addressがnullの場合は空文字をデフォルトに設定 -->
+                
                 <input type="text" id="details" name="details" value="{{ old('details', optional($address)->details) }}" required>
             </div>
             <div class="form-group">
                 <label for="building">建物名</label>
-                <!-- 建物名を表示する際、$addressがnullの場合は空文字をデフォルトに設定 -->
+                
                 <input type="text" id="building" name="building" value="{{ old('building', optional($address)->building) }}">
             </div>
             <button type="submit" class="submit-button">更新する</button>

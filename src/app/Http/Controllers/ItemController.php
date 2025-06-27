@@ -79,7 +79,7 @@ class ItemController extends Controller
             $query = Item::query();
 
             if (!is_null($userId)) {
-                // 自分の出品商品を除外
+                
                 $query->where('seller_id', '!=', $userId);
             }
             \Log::info('ItemController@index called');

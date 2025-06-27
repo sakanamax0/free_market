@@ -9,7 +9,7 @@ class AddSoldOutToProductsTable extends Migration
     public function up()
 {
     Schema::table('products', function (Blueprint $table) {
-        $table->boolean('sold_out')->default(false); // sold_out フィールドを追加
+        $table->boolean('sold_out')->default(false); 
     });
 }
 

@@ -84,7 +84,7 @@
                         <div class="product" style="position: relative;">
                             <div class="product__image">
                                 <img src="{{ $item->image_url }}" alt="商品画像">
-                                <!-- 商品が売り切れの場合に "SOLD OUT" を表示 -->
+                                
                                 @if ($item->sold_out)
                                     <div class="sold-out-overlay">
                                         <span>SOLD OUT</span>

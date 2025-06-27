@@ -9,8 +9,8 @@ class AddDescriptionAndPriceToProductsTable extends Migration
     public function up()
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->text('description')->nullable()->after('image'); // 商品の説明
-            $table->decimal('price', 10, 2)->nullable()->after('description'); // 商品の価格（小数点2桁）
+            $table->text('description')->nullable()->after('image'); 
+            $table->decimal('price', 10, 2)->nullable()->after('description'); 
         });
     }
 

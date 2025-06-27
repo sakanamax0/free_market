@@ -8,13 +8,13 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    // ログインフォームを表示
+   
     public function showLoginForm()
     {
-        return view('login'); // resources/views/login.blade.php を表示
+        return view('login'); 
     }
 
-    // ログイン処理
+    
     public function login(Request $request)
     {
         $request->validate([
@@ -23,17 +23,17 @@ class LoginController extends Controller
         ]);
 
         if (Auth::attempt($request->only('email', 'password'))) {
-            // ログイン成功後、index.blade.php へリダイレクト
+            
             return redirect()->route('index')->with('success', 'ログインに成功しました！');
         }
 
-        // ログイン失敗時の処理
+        
         return back()->withErrors([
             'email' => 'ログイン情報が正しくありません。',
         ])->withInput();
     }
 
-    // ログアウト処理
+    
     public function logout()
     {
         Auth::logout();

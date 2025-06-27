@@ -27,7 +27,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    // いいねに関するリレーション
+    
     public function likes()
     {
         return $this->hasMany(Like::class);
@@ -40,13 +40,13 @@ class User extends Authenticatable
 
     public function purchaseItems()
     {
-        return $this->hasMany(Order::class, 'buyer_id'); // 購入履歴を保存している場合
+        return $this->hasMany(Order::class, 'buyer_id'); 
     }
 
-    // ユーザーの配送先情報とのリレーション
+    
     public function address()
     {
-        return $this->hasOne(Address::class); // ユーザーは1つの住所を持つ
+        return $this->hasOne(Address::class); 
     }
 }
 

@@ -14,8 +14,8 @@ class AddSellerIdToItemsTable extends Migration
     public function up()
     {
         Schema::table('items', function (Blueprint $table) {
-            $table->unsignedBigInteger('seller_id')->nullable(); // 必要に応じて null を許可
-            $table->foreign('seller_id')->references('id')->on('users')->onDelete('cascade'); // 外部キー制約
+            $table->unsignedBigInteger('seller_id')->nullable(); 
+            $table->foreign('seller_id')->references('id')->on('users')->onDelete('cascade'); 
         });
     }
 
@@ -27,8 +27,8 @@ class AddSellerIdToItemsTable extends Migration
     public function down()
     {
         Schema::table('items', function (Blueprint $table) {
-            $table->dropForeign(['seller_id']); // 外部キーの削除
-            $table->dropColumn('seller_id'); // カラムの削除
+            $table->dropForeign(['seller_id']); 
+            $table->dropColumn('seller_id'); 
         });
     }
 }

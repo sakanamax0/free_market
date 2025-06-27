@@ -9,7 +9,7 @@ class Order extends Model
 {
     use HasFactory;
 
-    // 必要に応じて、テーブル名やカスタム設定を追加
+    
     protected $fillable = [
         'user_id', 
         'product_id', 

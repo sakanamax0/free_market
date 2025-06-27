@@ -55,7 +55,7 @@
             </div>
 
             <div class="tab-content">
-                <!-- 出品した商品 -->
+                
                 <div id="sell" class="tab-panel active">
                     @if (isset($sellItems) && $sellItems->isNotEmpty())
                         <ul>
@@ -68,7 +68,7 @@
                     @endif
                 </div>
 
-                <!-- 購入した商品 -->
+                
                 <div id="purchase" class="tab-panel">
                     @if ($purchaseItems->isEmpty())
                         <p>商品はありません。</p>

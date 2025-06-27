@@ -42,7 +42,7 @@ class ItemListTest extends TestCase
         $user = User::factory()->create();
         $item = Item::factory()->create(['sold_out' => true]);
 
-        // sold_items テーブルにレコードを追加（user_id が必須）
+        
         SoldItem::create([
             'item_id' => $item->id,
             'user_id' => $user->id,

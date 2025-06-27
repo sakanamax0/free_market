@@ -17,7 +17,7 @@ class ProductIndexTest extends TestCase
         $user = User::factory()->create();
         $items = Item::factory()->count(3)->create();
 
-        $response = $this->actingAs($user)->get(route('products.index'));  // ←ここを修正
+        $response = $this->actingAs($user)->get(route('products.index'));  
 
         $response->assertStatus(200);
         foreach ($items as $item) {
@@ -34,7 +34,7 @@ class ProductIndexTest extends TestCase
             'item_id' => $item->id,
         ]);
 
-        $response = $this->actingAs($user)->get(route('products.index'));  // ←ここを修正
+        $response = $this->actingAs($user)->get(route('products.index'));  
 
         $response->assertStatus(200);
         $response->assertSee('SOLD OUT');
@@ -44,7 +44,7 @@ class ProductIndexTest extends TestCase
     {
         $user = User::factory()->create();
 
-        // 別のユーザーを作成して明示的に seller_id を指定する
+        
         $otherUser = User::factory()->create();
 
         $otherItem = Item::factory()->create([
@@ -57,7 +57,7 @@ class ProductIndexTest extends TestCase
             'name' => '自分の商品',
         ]);
 
-        $response = $this->actingAs($user)->get(route('products.index'));  // ←ここを修正
+        $response = $this->actingAs($user)->get(route('products.index'));  
 
         $response->assertStatus(200);
         $response->assertSee($otherItem->name);

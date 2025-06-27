@@ -9,14 +9,14 @@ class AddBuildingToAddressesTable extends Migration
     public function up()
 {
     Schema::table('addresses', function (Blueprint $table) {
-        $table->string('building')->nullable();  // 'building'カラムを追加
+        $table->string('building')->nullable();  
     });
 }
 
 public function down()
 {
     Schema::table('addresses', function (Blueprint $table) {
-        $table->dropColumn('building');  // 'building'カラムを削除
+        $table->dropColumn('building');  
     });
 }
 

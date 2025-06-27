@@ -6,7 +6,7 @@
     <title>商品出品画面</title>
     <link rel="stylesheet" href="{{ asset('css/sell.css') }}">
     <style>
-        /* ボタンの通常状態 */
+        
         .category-button {
             background-color: #f0f0f0;
             border: 1px solid #ccc;
@@ -16,7 +16,7 @@
             cursor: pointer;
         }
 
-        /* ボタンの選択状態 */
+        
         .category-button.selected {
             background-color: #007bff;
             color: #fff;
@@ -65,7 +65,7 @@
                 <div class="categories">
                     <span>カテゴリ</span>
                     <div class="tags">
-                        <!-- カテゴリーボタン -->
+                        
                         @php
                             // 以前に選択されたカテゴリがあればそのクラスを付与する
                             $selectedCategories = old('selected_category') ? explode(',', old('selected_category')) : [];
@@ -106,11 +106,11 @@
         </form>
     </main>
     <script>
-        // 全てのカテゴリーボタンを取得
+        
         const categoryButtons = document.querySelectorAll('.category-button');
         const hiddenInput = document.getElementById('selected-category');
 
-        // 選択されたカテゴリーを保持する配列
+        
         let selectedCategories = @json($selectedCategories);
 
         categoryButtons.forEach(button => {
@@ -118,31 +118,31 @@
                 const category = button.textContent.trim();
 
                 if (button.classList.contains('selected')) {
-                    // 選択を解除
+                    
                     button.classList.remove('selected');
                     button.setAttribute('aria-pressed', 'false');
-                    // 配列から削除
+                    
                     selectedCategories = selectedCategories.filter(item => item !== category);
                 } else {
-                    // 選択を追加
+                   
                     button.classList.add('selected');
                     button.setAttribute('aria-pressed', 'true');
-                    // 配列に追加
+                    
                     selectedCategories.push(category);
                 }
 
-                // 配列をhidden inputに格納（カンマ区切りにする）
+                
                 hiddenInput.value = selectedCategories.join(',');
             });
         });
     </script>
     <script>
-    // 商品登録後のポップアップとリダイレクト
+    
     @if(session('success'))
         alert("{{ session('success') }}");
         setTimeout(function() {
             window.location.href = "{{ route('index') }}";
-        }, 2000);  // 2秒後に遷移
+        }, 2000);  
     @endif
 </script>
 

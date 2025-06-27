@@ -24,12 +24,12 @@
     </header>
 
     <div class="container">
-        <!-- 商品画像 -->
+        
         <div class="image">
             <img src="{{ $item->img_url }}" alt="{{ $item->name }}" width="300">
         </div>
 
-        <!-- 商品詳細 -->
+        
         <div class="details">
             <h2>{{ $item->name }}</h2>
             <p><strong>ブランド名:</strong> {{ $item->brand }}</p>
@@ -42,7 +42,7 @@
                 </span>
             </div>
 
-            <!-- コメント数 -->
+            
             <p><strong>コメント数:</strong> {{ $item->comments()->count() }}</p>
             
             <div class="category">
@@ -79,7 +79,7 @@
     </div>
 
     <script>
-        // いいねボタンの処理
+        
         document.getElementById('like-button').addEventListener('click', function() {
             fetch("{{ route('item.toggleLike', $item->id) }}", {
                 method: 'POST',

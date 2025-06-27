@@ -14,20 +14,20 @@ class RegisterTest extends TestCase
     public function 名前が入力されていない場合バリデーションエラーになる()
     {
         $response = $this->post('/register', [
-            'username' => '',          // ←ここを変更
+            'username' => '',         
             'email' => 'test@example.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',
         ]);
 
-        $response->assertSessionHasErrors(['username']);  // ←ここも変更
+        $response->assertSessionHasErrors(['username']);  
     }
 
     /** @test */
     public function メールアドレスが入力されていない場合バリデーションエラーになる()
     {
         $response = $this->post('/register', [
-            'username' => 'テストユーザー',  // ←ここも
+            'username' => 'テストユーザー',  
             'email' => '',
             'password' => 'password123',
             'password_confirmation' => 'password123',
@@ -85,7 +85,7 @@ class RegisterTest extends TestCase
             'password_confirmation' => 'password123',
         ]);
 
-        $response->assertRedirect('/login'); // 登録後にログイン画面へリダイレクトされる前提
+        $response->assertRedirect('/login'); 
         $this->assertDatabaseHas('users', ['email' => 'test@example.com']);
     }
 }

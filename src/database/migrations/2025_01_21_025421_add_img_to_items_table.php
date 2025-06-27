@@ -9,14 +9,14 @@ class AddImgToItemsTable extends Migration
     public function up()
 {
     Schema::table('items', function (Blueprint $table) {
-        $table->string('img')->nullable();  // 'img' カラムを追加
+        $table->string('img')->nullable();  
     });
 }
 
 public function down()
 {
     Schema::table('items', function (Blueprint $table) {
-        $table->dropColumn('img');  // 'img' カラムを削除
+        $table->dropColumn('img');  
     });
 }
 

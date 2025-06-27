@@ -11,13 +11,13 @@ class Like extends Model
 
     protected $fillable = ['user_id', 'item_id'];
 
-    // 商品とのリレーション
+    
     public function item()
     {
         return $this->belongsTo(Item::class);
     }
 
-    // ユーザーとのリレーション
+    
     public function user()
     {
         return $this->belongsTo(User::class);

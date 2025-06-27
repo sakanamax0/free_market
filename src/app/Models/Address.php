@@ -16,9 +16,9 @@ class Address extends Model
         'building',
     ];
 
-    // Address モデルと User モデルのリレーション
+    
     public function user()
     {
-        return $this->belongsTo(User::class);  // Address が User に属するリレーション
+        return $this->belongsTo(User::class); 
     }
 }

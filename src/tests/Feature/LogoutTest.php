@@ -18,7 +18,7 @@ class LogoutTest extends TestCase
         $response = $this->actingAs($user)->post('/logout');
 
         $response->assertRedirect('/login');
-        $this->assertGuest(); // 認証が解除されていることを確認
+        $this->assertGuest(); 
     }
 
     /** @test */
@@ -30,6 +30,6 @@ class LogoutTest extends TestCase
 
         $response = $this->get('/mypage');
 
-        $response->assertRedirect('/login'); // 認証していないとリダイレクトされる
+        $response->assertRedirect('/login'); 
     }
 }

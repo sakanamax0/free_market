@@ -9,19 +9,19 @@ class MypageController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth'); // 🔒 ログイン必須にする
+        $this->middleware('auth'); 
     }
 
-    // マイページの表示
+    
     public function index()
     {
         $user = Auth::user();
 
-        // ログインユーザーが出品した商品
-        $sellItems = $user->sellItems ?? collect(); // リレーションがない場合は空のコレクションを返す
+        
+        $sellItems = $user->sellItems ?? collect(); 
 
-        // ログインユーザーが購入した商品
-        $purchaseItems = $user->purchaseItems ?? collect(); // リレーションがない場合は空のコレクションを返す
+        
+        $purchaseItems = $user->purchaseItems ?? collect(); 
 
         return view('mypage', [
             'sellItems' => $sellItems,
@@ -30,7 +30,7 @@ class MypageController extends Controller
         ]);
     }
 
-    // プロフィール編集画面の表示
+    
     public function edit()
     {
         $user = Auth::user();
@@ -45,7 +45,7 @@ class MypageController extends Controller
         return view('mypage.profile', compact('userData'));
     }
 
-    // プロフィールの更新処理
+    
     public function update(Request $request)
     {
         $request->validate([
@@ -57,7 +57,7 @@ class MypageController extends Controller
 
         $user = Auth::user();
 
-        // ユーザー情報を更新
+       
         $user->username = $request->username;
         $user->postal_code = $request->postal_code;
         $user->address = $request->address;
