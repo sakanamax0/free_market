@@ -86,4 +86,10 @@ class Item extends Model
     {
         return Auth::check() && $this->seller_id === Auth::id();
     }
+
+    public function messages()
+    {
+        return $this->hasMany(\App\Models\Message::class);
+    }
+
 }

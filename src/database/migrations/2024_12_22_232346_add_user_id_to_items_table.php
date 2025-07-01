@@ -14,9 +14,10 @@ class AddUserIdToItemsTable extends Migration
 }
 
     public function down()
-    {
-        Schema::table('items', function (Blueprint $table) {
-            $table->dropColumn('user_id');
-        });
-    }
+{
+    Schema::table('items', function (Blueprint $table) {
+        $table->dropForeign(['user_id']); // 先に外部キー制約を削除
+        $table->dropColumn('user_id');    // その後、カラムを削除
+    });
+}
 }

@@ -45,6 +45,7 @@ class SellController extends Controller
         'condition' => $validatedData['condition'],
         'sold_out' => false,
         'img_url' => $url,
+        'seller_id' => auth()->id(), 
     ]);
      
     $item->categories()->attach($validatedData['categories']); 

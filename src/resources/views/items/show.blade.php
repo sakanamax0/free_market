@@ -24,76 +24,81 @@
     </header>
 
     <div class="container">
-        
         <div class="image">
             <img src="{{ $item->img_url }}" alt="{{ $item->name }}" width="300">
         </div>
 
-        
         <div class="details">
-            <h2>{{ $item->name }}</h2>
-            <p><strong>ブランド名:</strong> {{ $item->brand }}</p>
-            <p><strong>価格:</strong> ¥{{ number_format($item->price) }}（税込）</p>
-            
-            <!-- いいねボタン -->
-            <div>
-                <span class="like-button {{ $isLiked ? 'liked' : '' }}" id="like-button">
-                    ❤️ いいね ({{ $item->likes()->count() }})
-                </span>
-            </div>
+    <h2>{{ $item->name }}</h2>
+    <p><strong>ブランド名:</strong> {{ $item->brand }}</p>
+    <p><strong>価格:</strong> ¥{{ number_format($item->price) }}（税込）</p>
 
-            
-            <p><strong>コメント数:</strong> {{ $item->comments()->count() }}</p>
-            
-            <div class="category">
-                <strong>カテゴリー:</strong>
-                @foreach ($item->categories as $category)
-                    <span>{{ $category->name }}</span>@if (!$loop->last), @endif
-                @endforeach
-            </div>
-
-            <p><strong>商品状態:</strong> {{ $item->condition }}</p>
-            <p><strong>商品説明:</strong> {{ $item->description }}</p>
-            <a href="{{ route('purchase.index', $item->id) }}" class="button">購入手続きへ</a>
-        </div>
+    <!-- いいねボタン -->
+    <div>
+        <span class="like-button {{ $isLiked ? 'liked' : '' }}" id="like-button">
+            ❤️ いいね ({{ $item->likes()->count() }})
+        </span>
     </div>
 
-    <div style="padding: 20px;">
-        <h3>コメント</h3>
-        @foreach ($item->comments as $comment)
-            <div>
-                <strong>{{ $comment->user->name }}:</strong> {{ $comment->content }}
-            </div>
+    <p><strong>コメント数:</strong> {{ $item->comments()->count() }}</p>
+    <div class="category">
+        <strong>カテゴリー:</strong>
+        @foreach ($item->categories as $category)
+            <span>{{ $category->name }}</span>@if (!$loop->last), @endif
         @endforeach
-
-        @auth
-            <form action="{{ route('item.comment', $item->id) }}" method="POST">
-                @csrf
-                <textarea name="comment" rows="4" cols="50" placeholder="商品へのコメント" required></textarea>
-                <br>
-                <button type="submit" style="background-color: red; color: white; padding: 10px; border: none; margin-top: 10px;">コメントを送信する</button>
-            </form>
-        @else
-            <p>ログインするとコメントを投稿できます。</p>
-        @endauth
     </div>
 
-    <script>
-        
-        document.getElementById('like-button').addEventListener('click', function() {
-            fetch("{{ route('item.toggleLike', $item->id) }}", {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                const likeButton = document.getElementById('like-button');
-                likeButton.classList.toggle('liked', data.liked);
-                likeButton.innerHTML = `❤️ いいね (${data.likesCount})`;
-            });
+    <p><strong>商品状態:</strong> {{ $item->condition }}</p>
+    <p><strong>商品説明:</strong> {{ $item->description }}</p>
+    <a href="{{ route('purchase.index', $item->id) }}" class="button">購入手続きへ</a>
+
+    @auth
+        @if (auth()->id() !== $item->seller_id)
+            <form method="POST" action="{{ route('chatroom.enter', $item->id) }}" style="margin-top: 15px;">
+                @csrf
+                <button type="submit" class="button" style="background-color: green;">出品者にチャットを送信する</button>
+            </form>
+        @endif
+    @endauth
+</div>
+
+<!-- コメントセクション -->
+<div style="padding: 20px;">
+    <h3>コメント</h3>
+    @foreach ($item->comments as $comment)
+        <div>
+            <strong>{{ $comment->user->name }}:</strong> {{ $comment->content }}
+        </div>
+    @endforeach
+
+    @auth
+        <form action="{{ route('item.comment', $item->id) }}" method="POST">
+            @csrf
+            <textarea name="comment" rows="4" cols="50" placeholder="商品へのコメント" required></textarea>
+            <br>
+            <button type="submit" style="background-color: red; color: white; padding: 10px; border: none; margin-top: 10px;">コメントを送信する</button>
+        </form>
+    @else
+        <p>ログインするとコメントやチャットを投稿できます。</p>
+    @endauth
+</div>
+
+<!-- JavaScript: いいねの非同期処理 -->
+<script>
+    document.getElementById('like-button').addEventListener('click', function() {
+        fetch("{{ route('item.toggleLike', $item->id) }}", {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            const likeButton = document.getElementById('like-button');
+            likeButton.classList.toggle('liked', data.liked);
+            likeButton.innerHTML = `❤️ いいね (${data.likesCount})`;
         });
-    </script>
+    });
+</script>
 </body>
 </html>

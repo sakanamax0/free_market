@@ -4,33 +4,52 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Item;
+use App\Models\Message;
+use App\Models\ChatRoom;
 
 class MypageController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth'); 
+        $this->middleware('auth');
     }
 
-    
     public function index()
     {
         $user = Auth::user();
 
-        
-        $sellItems = $user->sellItems ?? collect(); 
+        // 出品商品はリレーションそのまま
+        $sellItems = $user->sellItems ?? collect();
 
-        
-        $purchaseItems = $user->purchaseItems ?? collect(); 
+        // 購入商品も同様にそのまま
+        $purchaseItems = $user->purchaseItems ?? collect();
+
+        // 取引中チャットルームを取得（購入者か販売者かつ未購入）
+        $ongoingChatRooms = ChatRoom::with(['item', 'messages' => function ($query) use ($user) {
+            $query->where('receiver_id', $user->id)
+                  ->where('is_read', false);
+        }])
+        ->where(function ($query) use ($user) {
+            $query->where('buyer_id', $user->id)
+                  ->orWhere('seller_id', $user->id);
+        })
+        ->where('is_purchased', false)
+        ->get();
+
+        // unread_count を ChatRoom オブジェクトに動的プロパティとしてセット
+        foreach ($ongoingChatRooms as $room) {
+            $room->unread_count = $room->messages->count();
+        }
 
         return view('mypage', [
             'sellItems' => $sellItems,
             'purchaseItems' => $purchaseItems,
-            'userData' => $user
+            'ongoingItems' => $ongoingChatRooms,  // ChatRoomコレクションをそのまま渡す
+            'userData' => $user,
         ]);
     }
 
-    
     public function edit()
     {
         $user = Auth::user();
@@ -45,7 +64,6 @@ class MypageController extends Controller
         return view('mypage.profile', compact('userData'));
     }
 
-    
     public function update(Request $request)
     {
         $request->validate([
@@ -57,7 +75,6 @@ class MypageController extends Controller
 
         $user = Auth::user();
 
-       
         $user->username = $request->username;
         $user->postal_code = $request->postal_code;
         $user->address = $request->address;
