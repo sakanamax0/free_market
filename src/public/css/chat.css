@@ -184,7 +184,7 @@ button:hover {
     }
 }
 
-/* 取引チャット画面のユーザー情報横並び */
+
 .user-info {
     display: flex;
     align-items: center;
@@ -200,13 +200,13 @@ button:hover {
     border: 1px solid #ccc;
 }
 
-/* ユーザー名のスタイル */
+
 .user-info .username {
     font-weight: bold;
     font-size: 1.1rem;
 }
 
-/* 線のスタイル（上下の仕切り線） */
+
 hr {
     border: none;
     border-top: 1px solid #ccc;

@@ -5,18 +5,18 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreChatRequest;
 use App\Models\ChatRoom;
 use App\Models\Message;
-use App\Models\User;  // ここを忘れずにuse追加
+use App\Models\User; 
 
 class ChatController extends Controller
 {
-    // チャット画面表示（チャットルームIDで）
+   
     public function show($chatRoomId)
     {
         $chatRoom = ChatRoom::with('item')->findOrFail($chatRoomId);
 
         $userId = auth()->id();
 
-        // 取引相手のユーザーを判別・取得
+       
         if ($userId === $chatRoom->seller_id) {
             $otherUser = User::find($chatRoom->buyer_id);
         } else {
@@ -24,18 +24,18 @@ class ChatController extends Controller
         }
         $otherUserName = $otherUser ? $otherUser->name : '未登録ユーザー';
 
-        // 未読メッセージを既読に更新
+        
         Message::where('chat_room_id', $chatRoomId)
             ->where('receiver_id', $userId)
             ->where('is_read', false)
             ->update(['is_read' => true]);
 
-        // メッセージを取得（作成日時昇順）
+       
         $messages = Message::where('chat_room_id', $chatRoomId)
             ->orderBy('created_at')
             ->get();
 
-        // 他のチャットルーム（未購入で関係あるもの）
+        
         $otherChatRooms = ChatRoom::with('item')
             ->where(function ($query) use ($userId) {
                 $query->where('buyer_id', $userId)
@@ -45,11 +45,11 @@ class ChatController extends Controller
             ->where('is_purchased', false)
             ->get();
 
-        // ビューに相手ユーザー名も渡す
+        
         return view('chat.show', compact('chatRoom', 'messages', 'otherChatRooms', 'otherUserName'));
     }
 
-    // メッセージ送信
+    
     public function store(StoreChatRequest $request, $chatRoomId)
     {
         $chatRoom = ChatRoom::findOrFail($chatRoomId);
@@ -78,7 +78,7 @@ class ChatController extends Controller
         return redirect()->route('chatroom.show', $chatRoom->id)->withInput();
     }
 
-    // メッセージ編集画面
+    
     public function edit($id)
     {
         $message = Message::findOrFail($id);
@@ -88,7 +88,7 @@ class ChatController extends Controller
         return view('chat.edit', compact('message'));
     }
 
-    // メッセージ更新処理
+    
     public function update(StoreChatRequest $request, $id)
     {
         $message = Message::findOrFail($id);
@@ -103,7 +103,7 @@ class ChatController extends Controller
         return redirect()->route('chatroom.show', $message->chat_room_id);
     }
 
-    // メッセージ削除処理
+    
     public function destroy($id)
     {
         $message = Message::findOrFail($id);

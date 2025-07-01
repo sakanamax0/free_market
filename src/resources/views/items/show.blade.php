@@ -33,7 +33,7 @@
     <p><strong>ブランド名:</strong> {{ $item->brand }}</p>
     <p><strong>価格:</strong> ¥{{ number_format($item->price) }}（税込）</p>
 
-    <!-- いいねボタン -->
+   
     <div>
         <span class="like-button {{ $isLiked ? 'liked' : '' }}" id="like-button">
             ❤️ いいね ({{ $item->likes()->count() }})
@@ -62,7 +62,7 @@
     @endauth
 </div>
 
-<!-- コメントセクション -->
+
 <div style="padding: 20px;">
     <h3>コメント</h3>
     @foreach ($item->comments as $comment)
@@ -83,7 +83,7 @@
     @endauth
 </div>
 
-<!-- JavaScript: いいねの非同期処理 -->
+
 <script>
     document.getElementById('like-button').addEventListener('click', function() {
         fetch("{{ route('item.toggleLike', $item->id) }}", {

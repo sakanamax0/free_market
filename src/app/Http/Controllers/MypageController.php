@@ -19,13 +19,13 @@ class MypageController extends Controller
     {
         $user = Auth::user();
 
-        // 出品商品はリレーションそのまま
+       
         $sellItems = $user->sellItems ?? collect();
 
-        // 購入商品も同様にそのまま
+        
         $purchaseItems = $user->purchaseItems ?? collect();
 
-        // 取引中チャットルームを取得（購入者か販売者かつ未購入）
+        
         $ongoingChatRooms = ChatRoom::with(['item', 'messages' => function ($query) use ($user) {
             $query->where('receiver_id', $user->id)
                   ->where('is_read', false);
@@ -37,7 +37,7 @@ class MypageController extends Controller
         ->where('is_purchased', false)
         ->get();
 
-        // unread_count を ChatRoom オブジェクトに動的プロパティとしてセット
+        
         foreach ($ongoingChatRooms as $room) {
             $room->unread_count = $room->messages->count();
         }
@@ -45,7 +45,7 @@ class MypageController extends Controller
         return view('mypage', [
             'sellItems' => $sellItems,
             'purchaseItems' => $purchaseItems,
-            'ongoingItems' => $ongoingChatRooms,  // ChatRoomコレクションをそのまま渡す
+            'ongoingItems' => $ongoingChatRooms,  
             'userData' => $user,
         ]);
     }
