@@ -92,4 +92,14 @@ class Item extends Model
         return $this->hasMany(\App\Models\Message::class);
     }
 
+    protected static function booted()
+{
+    static::updated(function ($item) {
+        if ($item->isDirty('buyer_id') && $item->buyer_id !== null) {
+            // buyer_idが変更されnull→IDになった時のみ
+            \App\Events\ItemPurchased::dispatch($item);
+        }
+    });
+}
+
 }

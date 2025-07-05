@@ -9,6 +9,18 @@
 
 </head>
 <body>
+    @if(session('success'))
+        <div class="alert alert-success" style="background:#d4edda; color:#155724; padding:10px; margin:10px auto; max-width: 600px; border-radius: 4px;">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger" style="background:#f8d7da; color:#721c24; padding:10px; margin:10px auto; max-width: 600px; border-radius: 4px;">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <header class="header">
         <div class="header__logo">
             <img src="{{ asset('images/logo.png') }}" alt="COACHTECHロゴ">

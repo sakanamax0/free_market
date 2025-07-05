@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class ChatRoom extends Model
 {
+    use HasFactory;
+    
     protected $fillable = ['item_id', 'seller_id', 'buyer_id', 'is_purchased'];
 
     public function item()

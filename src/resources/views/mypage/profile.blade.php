@@ -36,11 +36,26 @@
     <main>
         <div class="profile-edit-section">
             <h2>プロフィール設定</h2>
-            <form action="{{ route('mypage.update') }}" method="POST">
+
+          
+            <div class="profile-image-preview">
+                <img 
+                    src="{{ $userData['profile_photo'] ? asset('storage/' . $userData['profile_photo']) : asset('images/default-profile.png') }}" 
+                    alt="プロフィール画像" 
+                    class="profile-img"
+                >
+            </div>
+
+           
+            <form action="{{ route('mypage.update') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group">
-                    <label for="username">ユーザー名</label>
-                    <input type="text" id="username" name="username" value="{{ $userData['username'] }}">
+                    <label for="profile_photo">プロフィール画像を変更</label>
+                    <input type="file" id="profile_photo" name="profile_photo" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label for="name">ユーザー名</label>
+                    <input type="text" id="name" name="name" value="{{ $userData['name'] }}">
                 </div>
                 <div class="form-group">
                     <label for="postal_code">郵便番号</label>
