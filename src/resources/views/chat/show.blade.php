@@ -24,13 +24,13 @@
         </div>
 
         <div class="main">
-            {{-- ユーザー登録写真と名前の表示 --}}
+
             <div class="user-info">
                 <img src="{{ $otherUserPhotoUrl ?? asset('images/default-profile.png') }}" alt="ユーザー写真">
                 <div class="username">{{ $otherUserName ?? '未登録ユーザー' }}さんとの取引画面</div>
             </div>
 
-            {{-- 購入者向け：取引完了ボタン --}}
+
             @if (auth()->id() === $chatRoom->item->buyer_id && !$hasRated)
                 <div class="complete-btn-container">
                     <button id="complete-transaction-btn" class="complete-btn">取引を完了する</button>
@@ -53,7 +53,7 @@
                 @foreach ($messages as $msg)
                 <div class="message {{ $msg->sender_id === auth()->id() ? 'mine' : 'their' }}">
     <div class="content-header" style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-        {{-- 送信者プロフィール画像 --}}
+  
         <img 
             src="{{ $msg->sender->profile_photo 
                 ? asset('storage/' . $msg->sender->profile_photo) 
@@ -61,7 +61,7 @@
             alt="プロフィール画像" 
             style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;"
         >
-        {{-- 送信者名前 --}}
+
         <strong>{{ $msg->sender->name }}</strong>
     </div>
 
@@ -114,7 +114,7 @@
         </div>
     </div>
 
-    {{-- 取引完了モーダル --}}
+
     <div id="rating-modal" class="modal hidden">
         <div class="modal-overlay"></div>
         <div class="modal-content">
@@ -140,7 +140,7 @@
         </div>
     </div>
 
-    {{-- モーダルとフォーム関連のJS --}}
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const btn = document.getElementById('complete-transaction-btn');
@@ -158,7 +158,7 @@
                 }
             @endif
 
-            // 入力内容の保存・復元処理
+
             const textarea = document.getElementById('chat-content');
             const storageKey = 'chatContent_{{ $chatRoom->id }}';
 

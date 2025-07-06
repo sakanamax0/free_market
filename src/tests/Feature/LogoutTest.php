@@ -10,7 +10,7 @@ class LogoutTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+
     public function ログイン中のユーザーがログアウトするとログインページにリダイレクトされる()
     {
         $user = User::factory()->create();
@@ -21,7 +21,7 @@ class LogoutTest extends TestCase
         $this->assertGuest(); 
     }
 
-    /** @test */
+
     public function ログアウト後はマイページにアクセスできない()
     {
         $user = User::factory()->create();

@@ -20,7 +20,7 @@
 
     <div class="main">
 
-        {{-- ★ 追加：相手ユーザーのプロフィール画像と名前表示 --}}
+
         <div class="user-info" style="display: flex; align-items: center; gap: 10px; padding: 10px 0;">
             <img 
                 src="{{ $otherUserPhotoUrl ?? asset('images/default-profile.png') }}" 
@@ -40,7 +40,7 @@
             </div>
         </div>
 
-        {{-- 取引完了ボタン表示 --}}
+
         @if (auth()->id() === $buyerId && !$hasRated)
             <div class="complete-btn-container" style="text-align: right; margin: 1em 0;">
                 <button id="complete-transaction-btn" class="complete-btn">取引を完了する</button>
@@ -53,7 +53,6 @@
             @foreach ($messages as $msg)
                 <div class="message {{ $msg->sender_id === auth()->id() ? 'mine' : 'their' }}">
                     <div class="content-header" style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                        {{-- 送信者プロフィール画像 --}}
                         <img 
                             src="{{ $msg->sender->profile_photo 
                                 ? asset('storage/' . $msg->sender->profile_photo) 
@@ -61,7 +60,7 @@
                             alt="プロフィール画像" 
                             style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;"
                         >
-                        {{-- 送信者名前 --}}
+
                         <strong>{{ $msg->sender->name }}</strong>
                     </div>
 
@@ -107,7 +106,7 @@
         </form>
     </div>
 
-    {{-- 評価モーダル --}}
+
     <div id="rating-modal" class="modal hidden">
         <div class="modal-overlay"></div>
         <div class="modal-content">

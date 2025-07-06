@@ -10,7 +10,7 @@ class RegisterTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+
     public function 名前が入力されていない場合バリデーションエラーになる()
     {
         $response = $this->post('/register', [
@@ -23,7 +23,7 @@ class RegisterTest extends TestCase
         $response->assertSessionHasErrors(['username']);  
     }
 
-    /** @test */
+
     public function メールアドレスが入力されていない場合バリデーションエラーになる()
     {
         $response = $this->post('/register', [
@@ -36,7 +36,7 @@ class RegisterTest extends TestCase
         $response->assertSessionHasErrors(['email']);
     }
 
-    /** @test */
+
     public function パスワードが入力されていない場合バリデーションエラーになる()
     {
         $response = $this->post('/register', [
@@ -49,7 +49,6 @@ class RegisterTest extends TestCase
         $response->assertSessionHasErrors(['password']);
     }
 
-    /** @test */
     public function パスワードが7文字以下の場合バリデーションエラーになる()
     {
         $response = $this->post('/register', [
@@ -62,7 +61,7 @@ class RegisterTest extends TestCase
         $response->assertSessionHasErrors(['password']);
     }
 
-    /** @test */
+
     public function パスワードと確認用が一致しない場合バリデーションエラーになる()
     {
         $response = $this->post('/register', [
@@ -75,7 +74,7 @@ class RegisterTest extends TestCase
         $response->assertSessionHasErrors(['password']);
     }
 
-    /** @test */
+
     public function 正常に登録されるとログイン画面にリダイレクトされる()
     {
         $response = $this->post('/register', [

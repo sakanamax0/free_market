@@ -22,7 +22,7 @@ abstract class DuskTestCase extends BaseTestCase
             '--disable-dev-shm-usage',
         ]);
 
-        // 明示的に Chromium のパスを指定
+
         $options->setBinary('/usr/bin/google-chrome');
 
         return RemoteWebDriver::create(

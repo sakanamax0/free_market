@@ -14,7 +14,7 @@ class ChatRoomViewTest extends TestCase
 
     public function test_chatroom_page_can_be_accessed_by_seller()
     {
-        // ユーザー・商品・チャットルーム作成
+
         $seller = User::factory()->create();
         $buyer = User::factory()->create();
         $item = Item::factory()->create(['seller_id' => $seller->id]);
@@ -24,13 +24,13 @@ class ChatRoomViewTest extends TestCase
             'item_id' => $item->id,
         ]);
 
-        // sellerとしてログインしてチャット画面にアクセス
+
         $response = $this->actingAs($seller)
                          ->get(route('chatroom.show', $chatRoom->id));
 
         $response->assertStatus(200);
         $response->assertSee($item->name);
-        $response->assertSee($buyer->name);  // 他方ユーザー名が表示されているか
+        $response->assertSee($buyer->name);  
     }
 
     public function test_chatroom_page_can_be_accessed_by_buyer()
@@ -44,7 +44,7 @@ class ChatRoomViewTest extends TestCase
             'item_id' => $item->id,
         ]);
 
-        // buyerとしてログインしてチャット画面にアクセス
+
         $response = $this->actingAs($buyer)
                          ->get(route('chatroom.show', $chatRoom->id));
 
@@ -58,6 +58,6 @@ class ChatRoomViewTest extends TestCase
         $chatRoom = ChatRoom::factory()->create();
 
         $response = $this->get(route('chatroom.show', $chatRoom->id));
-        $response->assertRedirect('/login');  // ログイン画面にリダイレクトされること
+        $response->assertRedirect('/login');  
     }
 }

@@ -143,35 +143,30 @@ main {
     border-radius: 12px;
 }
 
-/* ★ 評価星の追加CSS */
+
 .user-rating {
     display: flex;
     align-items: center;
     gap: 4px;
     font-size: 18px;
     color: #ccc;
-    /* 空星の色 */
 }
 
 .user-rating .star {
     cursor: default;
 }
 
-/* 満点の星 */
+
 .user-rating .star.full {
     color: #ffc107;
-    /* 黄金色 */
 }
 
-/* 半分星の表現 */
 .user-rating .star.half {
     position: relative;
     color: #ccc;
-    /* 空星（グレー）全体に */
     overflow: hidden;
     display: inline-block;
     width: 1em;
-    /* 文字の幅に合わせて */
 }
 
 .user-rating .star.half::before {
@@ -182,11 +177,10 @@ main {
     width: 50%;
     overflow: hidden;
     color: #ffc107;
-    /* 黄金色 */
     pointer-events: none;
 }
 
-/* 評価数値の表示 */
+
 .rating-score {
     font-size: 14px;
     color: #666;
@@ -201,7 +195,6 @@ main {
 
 .tab-link {
     position: relative;
-    /* バッジの絶対配置の基準に */
     padding: 10px 20px;
     background-color: #eee;
     border-radius: 4px;
@@ -214,7 +207,7 @@ main {
     color: white;
 }
 
-/* タブ内のバッジ */
+
 .tab-link .badge {
     position: absolute;
     top: 5px;
@@ -227,7 +220,7 @@ main {
     line-height: 1;
 }
 
-/* 文字とバッジを分ける場合はspanを使い、このように微調整もできます */
+
 .tab-link .tab-text {
     position: relative;
     z-index: 1;

@@ -51,7 +51,7 @@
             />
             <h2>{{ $userData->name ?? $userData->name ?? 'ユーザー' }}</h2>
 
-            {{-- ★ここから平均評価の星表示 --}}
+
             <div class="user-rating">
                 @php
                     $average = $userData->averageRating();
@@ -90,7 +90,7 @@
         </div>
 
         <div class="tab-content">
-            {{-- 出品した商品 --}}
+
             <div id="sell" class="tab-panel active">
                 @if ($sellItems->isEmpty())
                     <p>商品はありません。</p>
@@ -108,7 +108,7 @@
                 @endif
             </div>
 
-            {{-- 購入した商品 --}}
+
             <div id="purchase" class="tab-panel">
                 @if ($purchaseItems->isEmpty())
                     <p>商品はありません。</p>
@@ -126,7 +126,7 @@
                 @endif
             </div>
 
-            {{-- 取引中の商品 --}}
+
             <div id="ongoing" class="tab-panel">
                 @if ($ongoingItems->isEmpty())
                     <p>商品はありません。</p>
