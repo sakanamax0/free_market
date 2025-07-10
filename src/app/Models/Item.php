@@ -93,13 +93,11 @@ class Item extends Model
     }
 
     protected static function booted()
-{
-    static::updated(function ($item) {
-        if ($item->isDirty('buyer_id') && $item->buyer_id !== null) {
-            // buyer_idが変更されnull→IDになった時のみ
-            \App\Events\ItemPurchased::dispatch($item);
-        }
-    });
-}
-
-}
+    {
+        static::updated(function ($item) {
+            if ($item->isDirty('buyer_id') && $item->buyer_id !== null) {
+                \App\Events\ItemPurchased::dispatch($item, auth()->user());
+            }
+        });
+    }
+    
