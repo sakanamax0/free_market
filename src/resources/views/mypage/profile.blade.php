@@ -30,14 +30,13 @@
         @else
             <a href="{{ route('login') }}">ログイン</a>
         @endauth
-    </nav>
+        </nav>
     </header>
 
     <main>
         <div class="profile-edit-section">
             <h2>プロフィール設定</h2>
 
-          
             <div class="profile-image-preview">
                 <img 
                     src="{{ $userData['profile_photo'] ? asset('storage/' . $userData['profile_photo']) : asset('images/default-profile.png') }}" 
@@ -46,7 +45,6 @@
                 >
             </div>
 
-           
             <form action="{{ route('mypage.update') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group">
@@ -58,16 +56,16 @@
                     <input type="text" id="name" name="name" value="{{ $userData['name'] }}">
                 </div>
                 <div class="form-group">
-                    <label for="postal_code">郵便番号</label>
-                    <input type="text" id="postal_code" name="postal_code" value="{{ $userData['postal_code'] }}">
+                    <label for="zipcode">郵便番号</label>
+                    <input type="text" id="zipcode" name="zipcode" value="{{ $userData['address']->zipcode ?? '' }}">
                 </div>
                 <div class="form-group">
-                    <label for="address">住所</label>
-                    <input type="text" id="address" name="address" value="{{ $userData['address'] }}">
+                    <label for="details">住所</label>
+                    <input type="text" id="details" name="details" value="{{ $userData['address']->details ?? '' }}">
                 </div>
                 <div class="form-group">
                     <label for="building">建物名</label>
-                    <input type="text" id="building" name="building" value="{{ $userData['building'] }}">
+                    <input type="text" id="building" name="building" value="{{ $userData['address']->building ?? '' }}">
                 </div>
                 <button type="submit" class="submit-btn">更新する</button>
             </form>

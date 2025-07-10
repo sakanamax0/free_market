@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Item;
 use App\Models\Message;
 use App\Models\ChatRoom;
+use App\Models\SoldItem;
 
 class MypageController extends Controller
 {
@@ -20,8 +21,16 @@ class MypageController extends Controller
     {
         $user = Auth::user();
 
+
         $sellItems = $user->sellItems ?? collect();
-        $purchaseItems = $user->purchaseItems ?? collect();
+
+
+        $purchaseItems = SoldItem::where('user_id', $user->id)
+            ->with('item')
+            ->get()
+            ->pluck('item')
+            ->filter(); 
+
 
         $ongoingChatRooms = ChatRoom::with(['item', 'messages' => function ($query) use ($user) {
             $query->where('receiver_id', $user->id)
@@ -49,43 +58,35 @@ class MypageController extends Controller
     public function edit()
     {
         $user = Auth::user();
-
+    
         $userData = [
             'name' => $user->name ?? '',
-            'postal_code' => $user->postal_code ?? '',
-            'address' => $user->address ?? '',
-            'building' => $user->building ?? '',
+            'address' => $user->address ?? null,  // ← addressごと渡す
             'profile_photo' => $user->profile_photo ?? null,
         ];
-
+    
         return view('mypage.profile', compact('userData'));
     }
+    
 
     public function update(Request $request)
     {
         $request->validate([
             'name' => 'nullable|string|max:255',
-            'postal_code' => 'nullable|string|max:10',
-            'address' => 'nullable|string|max:255',
+            'zipcode' => 'nullable|string|max:10',
+            'details' => 'nullable|string|max:255',
             'building' => 'nullable|string|max:255',
             'profile_photo' => 'nullable|image|max:2048',
         ]);
-        
+
         $user = Auth::user();
-        
+
+
         if ($request->filled('name')) {
             $user->name = $request->name;
         }
-        if ($request->filled('postal_code')) {
-            $user->postal_code = $request->postal_code;
-        }
-        if ($request->filled('address')) {
-            $user->address = $request->address;
-        }
-        if ($request->filled('building')) {
-            $user->building = $request->building;
-        }
-        
+
+
         if ($request->hasFile('profile_photo')) {
             if ($user->profile_photo && Storage::disk('public')->exists($user->profile_photo)) {
                 Storage::disk('public')->delete($user->profile_photo);
@@ -93,9 +94,26 @@ class MypageController extends Controller
             $path = $request->file('profile_photo')->store('profile_photos', 'public');
             $user->profile_photo = $path;
         }
-        
+
         $user->save();
-        
+
+
+        if ($request->filled('zipcode') || $request->filled('details') || $request->filled('building')) {
+            if ($user->address) {
+                $user->address->update([
+                    'zipcode' => $request->zipcode,
+                    'details' => $request->details,
+                    'building' => $request->building,
+                ]);
+            } else {
+                $user->address()->create([
+                    'zipcode' => $request->zipcode,
+                    'details' => $request->details,
+                    'building' => $request->building,
+                ]);
+            }
+        }
+
         return redirect()->route('mypage')->with('success', 'プロフィールを更新しました');
     }
 
