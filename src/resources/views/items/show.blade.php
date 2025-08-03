@@ -1,23 +1,64 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $item->name }}</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; }
-        .container { display: flex; margin: 20px; }
-        .image { width: 50%; text-align: center; }
-        .details { width: 50%; padding: 20px; }
-        .details h2 { margin-bottom: 10px; }
-        .details p { margin: 5px 0; }
-        .button { display: inline-block; padding: 10px 20px; background-color: red; color: white; text-decoration: none; border-radius: 5px; }
-        .category { margin-top: 10px; }
-        .like-button { cursor: pointer; color: red; }
-        .liked { color: green; }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            margin: 20px;
+        }
+
+        .image {
+            width: 50%;
+            text-align: center;
+        }
+
+        .details {
+            width: 50%;
+            padding: 20px;
+        }
+
+        .details h2 {
+            margin-bottom: 10px;
+        }
+
+        .details p {
+            margin: 5px 0;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .category {
+            margin-top: 10px;
+        }
+
+        .like-button {
+            cursor: pointer;
+            color: red;
+        }
+
+        .liked {
+            color: green;
+        }
     </style>
 </head>
+
 <body>
     <header style="background: black; color: white; padding: 10px;">
         <h1>COACHTECH</h1>
@@ -29,76 +70,78 @@
         </div>
 
         <div class="details">
-    <h2>{{ $item->name }}</h2>
-    <p><strong>ブランド名:</strong> {{ $item->brand }}</p>
-    <p><strong>価格:</strong> ¥{{ number_format($item->price) }}（税込）</p>
-
-   
-    <div>
-        <span class="like-button {{ $isLiked ? 'liked' : '' }}" id="like-button">
-            ❤️ いいね ({{ $item->likes()->count() }})
-        </span>
-    </div>
-
-    <p><strong>コメント数:</strong> {{ $item->comments()->count() }}</p>
-    <div class="category">
-        <strong>カテゴリー:</strong>
-        @foreach ($item->categories as $category)
-            <span>{{ $category->name }}</span>@if (!$loop->last), @endif
-        @endforeach
-    </div>
-
-    <p><strong>商品状態:</strong> {{ $item->condition }}</p>
-    <p><strong>商品説明:</strong> {{ $item->description }}</p>
-    <a href="{{ route('purchase.index', $item->id) }}" class="button">購入手続きへ</a>
-
-    @auth
-        @if (auth()->id() !== $item->seller_id)
-            <form method="POST" action="{{ route('chatroom.enter', $item->id) }}" style="margin-top: 15px;">
-                @csrf
-                <button type="submit" class="button" style="background-color: green;">出品者にチャットを送信する</button>
-            </form>
-        @endif
-    @endauth
-</div>
+            <h2>{{ $item->name }}</h2>
+            <p><strong>ブランド名:</strong> {{ $item->brand }}</p>
+            <p><strong>価格:</strong> ¥{{ number_format($item->price) }}（税込）</p>
 
 
-<div style="padding: 20px;">
-    <h3>コメント</h3>
-    @foreach ($item->comments as $comment)
-        <div>
-            <strong>{{ $comment->user->name }}:</strong> {{ $comment->content }}
-        </div>
-    @endforeach
+            <div>
+                <span class="like-button {{ $isLiked ? 'liked' : '' }}" id="like-button">
+                    ❤️ いいね ({{ $item->likes()->count() }})
+                </span>
+            </div>
 
-    @auth
-        <form action="{{ route('item.comment', $item->id) }}" method="POST">
+            <p><strong>コメント数:</strong> {{ $item->comments()->count() }}</p>
+            <div class="category">
+                <strong>カテゴリー:</strong>
+                @foreach ($item->categories as $category)
+                <span>{{ $category->name }}</span>@if (!$loop->last), @endif
+                @endforeach
+            </div>
+
+            <p><strong>商品状態:</strong> {{ $item->condition }}</p>
+            <p><strong>商品説明:</strong> {{ $item->description }}</p>
+            <a href="{{ route('purchase.index', $item->id) }}" class="button">購入手続きへ</a>
+
+            {{-- @auth
+    @if (auth()->id() !== $item->seller_id)
+        <form method="POST" action="{{ route('chatroom.enter', $item->id) }}" style="margin-top: 15px;">
             @csrf
-            <textarea name="comment" rows="4" cols="50" placeholder="商品へのコメント" required></textarea>
-            <br>
-            <button type="submit" style="background-color: red; color: white; padding: 10px; border: none; margin-top: 10px;">コメントを送信する</button>
-        </form>
-    @else
-        <p>ログインするとコメントやチャットを投稿できます。</p>
-    @endauth
-</div>
+            <button type="submit" class="button" style="background-color: green;">出品者にチャットを送信する</button>
+            </form>
+            @endif
+            @endauth --}}
+
+        </div>
 
 
-<script>
-    document.getElementById('like-button').addEventListener('click', function() {
-        fetch("{{ route('item.toggleLike', $item->id) }}", {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            const likeButton = document.getElementById('like-button');
-            likeButton.classList.toggle('liked', data.liked);
-            likeButton.innerHTML = `❤️ いいね (${data.likesCount})`;
-        });
-    });
-</script>
+        <div style="padding: 20px;">
+            <h3>コメント</h3>
+            @foreach ($item->comments as $comment)
+            <div>
+                <strong>{{ $comment->user->name }}:</strong> {{ $comment->content }}
+            </div>
+            @endforeach
+
+            @auth
+            <form action="{{ route('item.comment', $item->id) }}" method="POST">
+                @csrf
+                <textarea name="comment" rows="4" cols="50" placeholder="商品へのコメント" required></textarea>
+                <br>
+                <button type="submit" style="background-color: red; color: white; padding: 10px; border: none; margin-top: 10px;">コメントを送信する</button>
+            </form>
+            @else
+            <p>ログインするとコメントやチャットを投稿できます。</p>
+            @endauth
+        </div>
+
+
+        <script>
+            document.getElementById('like-button').addEventListener('click', function() {
+                fetch("{{ route('item.toggleLike', $item->id) }}", {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        const likeButton = document.getElementById('like-button');
+                        likeButton.classList.toggle('liked', data.liked);
+                        likeButton.innerHTML = `❤️ いいね (${data.likesCount})`;
+                    });
+            });
+        </script>
 </body>
+
 </html>

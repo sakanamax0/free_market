@@ -21,27 +21,28 @@ class MypageController extends Controller
     {
         $user = Auth::user();
 
-
         $sellItems = $user->sellItems ?? collect();
-
 
         $purchaseItems = SoldItem::where('user_id', $user->id)
             ->with('item')
             ->get()
             ->pluck('item')
-            ->filter(); 
+            ->filter();
 
-
+        // 修正部分：購入済みのチャットルームだけを取得し、関連商品のsold_outがtrueのものに限定
         $ongoingChatRooms = ChatRoom::with(['item', 'messages' => function ($query) use ($user) {
             $query->where('receiver_id', $user->id)
-                  ->where('is_read', false);
+                ->where('is_read', false);
         }])
-        ->where(function ($query) use ($user) {
-            $query->where('buyer_id', $user->id)
-                  ->orWhere('seller_id', $user->id);
-        })
-        ->where('is_purchased', false)
-        ->get();
+            ->where(function ($query) use ($user) {
+                $query->where('buyer_id', $user->id)
+                    ->orWhere('seller_id', $user->id);
+            })
+            ->where('is_purchased', true)
+            ->whereHas('item', function ($query) {
+                $query->where('sold_out', true);
+            })
+            ->get();
 
         foreach ($ongoingChatRooms as $room) {
             $room->unread_count = $room->messages->count();
@@ -54,6 +55,7 @@ class MypageController extends Controller
             'userData' => $user,
         ]);
     }
+
 
     public function edit()
     {

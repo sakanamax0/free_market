@@ -12,7 +12,8 @@ class DatabaseSeeder extends Seeder
             CategoriesTableSeeder::class,
             DownloadImagesSeeder::class,
             UsersTableSeeder::class,  
-            ItemsTableSeeder::class,  
+            ItemsTableSeeder::class,
+            UpdateIsPurchasedSeeder::class,
         ]);
     }
 }

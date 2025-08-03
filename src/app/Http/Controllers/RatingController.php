@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Rating;
+use App\Models\User;
+use App\Models\Item;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\PurchaseNotificationMail;
 
 class RatingController extends Controller
 {
@@ -25,12 +29,21 @@ class RatingController extends Controller
             return redirect()->back()->with('error', '既に評価済みです。');
         }
 
+        // 評価を保存
         Rating::create([
             'from_user_id' => auth()->id(),
             'to_user_id' => $validated['to_user_id'],
             'item_id' => $validated['item_id'],
             'score' => $validated['score'],
         ]);
+
+        // メール通知
+        $item = Item::find($validated['item_id']);
+        $seller = $item->user; // itemがuserリレーションを持っている場合
+        $toUser = User::find($validated['to_user_id']);
+        if ($toUser && $toUser->email) {
+            Mail::to($seller->email)->send(new PurchaseNotificationMail($item, auth()->user()->name));
+        }
 
         return redirect()->route('index')->with('success', '評価を送信しました。');
     }
