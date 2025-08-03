@@ -34,11 +34,11 @@ class PurchaseNotificationMail extends Mailable
     public function build()
     {
         return $this->subject('商品が購入されました')
-                    ->markdown('emails.purchase_notification')
-                    ->with([
-                        'item' => $this->item,
-                        'buyerName' => $this->buyerName,
-                        'message' => '該当商品の購入者チャット画面へアクセスして、商品購入者の評価をしてください。',
-                    ]);
+            ->markdown('emails.purchase_notification')
+            ->with([
+                'item' => $this->item,
+                'buyerName' => $this->buyerName,
+                'message' => '該当商品の購入者チャット画面へアクセスして、商品購入者の評価をしてください。',
+            ]);
     }
 }

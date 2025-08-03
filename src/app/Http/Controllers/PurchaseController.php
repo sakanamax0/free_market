@@ -13,6 +13,8 @@ use App\Models\SoldItem;
 use App\Models\Address;
 use App\Events\ItemPurchased;
 use Stripe\StripeClient;
+use App\Models\ChatRoom;
+
 
 class PurchaseController extends Controller
 {
@@ -79,7 +81,7 @@ class PurchaseController extends Controller
             !$request->sending_postcode ||
             !$request->sending_address
         ) {
-            throw new Exception("必要なクエリパラメータが不足しています（user_id, amount, sending_postcode, sending_address）");
+            throw new \Exception("必要なクエリパラメータが不足しています（user_id, amount, sending_postcode, sending_address）");
         }
 
         $item = Item::findOrFail($item_id);
@@ -88,8 +90,7 @@ class PurchaseController extends Controller
             return redirect('/')->with('error', 'この商品はすでに購入済みです。');
         }
 
-
-
+        // 購入処理
         SoldItem::create([
             'user_id' => $request->user_id,
             'item_id' => $item_id,
@@ -102,6 +103,22 @@ class PurchaseController extends Controller
         $item->buyer_id = $request->user_id;
         $item->save();
 
+        // チャットルーム作成（存在しない場合のみ）
+        $existingRoom = ChatRoom::where('item_id', $item_id)
+            ->where('seller_id', $item->seller_id)
+            ->where('buyer_id', $request->user_id)
+            ->first();
+
+        if (!$existingRoom) {
+            ChatRoom::create([
+                'item_id'     => $item_id,
+                'seller_id'   => $item->seller_id,
+                'buyer_id'    => $request->user_id,
+                'is_purchased' => true, // trueで保存（falseから始めたい場合はfalseに）
+            ]);
+        }
+
+        // 購入完了イベント発火（メール通知などに使用）
         $buyer = User::find($request->user_id);
         event(new ItemPurchased($item, $buyer));
 

@@ -42,7 +42,7 @@
             <hr>
 
             <div class="item-info">
-                <a href="{{ route('purchase.index', ['item_id' => $chatRoom->item->id]) }}">
+                <a href="{{ route('item.show', ['item_id' => $chatRoom->item->id]) }}">
                     <img src="{{ $chatRoom->item->image_url }}" alt="商品画像" style="cursor: pointer;">
                 </a>
                 <div class="details">
@@ -156,7 +156,9 @@
                 });
             }
 
-            @if(auth() - > id() === $chatRoom - > item - > seller_id && $chatRoom - > item - > buyer_id && !$hasRated)
+            @if(auth()-> id() === $chatRoom -> item -> seller_id && $chatRoom -> item -> buyer_id && !$hasRated)
+
+
             if (modal) {
                 modal.classList.remove('hidden');
             }
