@@ -21,22 +21,28 @@ class MypageController extends Controller
     {
         $user = Auth::user();
 
+
         $sellItems = $user->sellItems ?? collect();
 
-        $purchaseItems = SoldItem::where('user_id', $user->id)
-            ->with('item')
-            ->get()
-            ->pluck('item')
-            ->filter();
+       
+        $purchaseChatRooms = ChatRoom::with('item')
+            ->where('buyer_id', $user->id)
+            ->whereHas('item', function ($query) {
+                $query->where('sold_out', true);
+            })
+            ->get();
 
-        // 修正部分：購入済みのチャットルームだけを取得し、関連商品のsold_outがtrueのものに限定
-        $ongoingChatRooms = ChatRoom::with(['item', 'messages' => function ($query) use ($user) {
-            $query->where('receiver_id', $user->id)
-                ->where('is_read', false);
-        }])
+        
+        $ongoingChatRooms = ChatRoom::with([
+                'item',
+                'messages' => function ($query) use ($user) {
+                    $query->where('receiver_id', $user->id)
+                          ->where('is_read', false);
+                }
+            ])
             ->where(function ($query) use ($user) {
                 $query->where('buyer_id', $user->id)
-                    ->orWhere('seller_id', $user->id);
+                      ->orWhere('seller_id', $user->id);
             })
             ->where('is_purchased', true)
             ->whereHas('item', function ($query) {
@@ -44,32 +50,31 @@ class MypageController extends Controller
             })
             ->get();
 
+   
         foreach ($ongoingChatRooms as $room) {
             $room->unread_count = $room->messages->count();
         }
 
         return view('mypage', [
             'sellItems' => $sellItems,
-            'purchaseItems' => $purchaseItems,
+            'purchaseItems' => $purchaseChatRooms, 
             'ongoingItems' => $ongoingChatRooms,
             'userData' => $user,
         ]);
     }
 
-
     public function edit()
     {
         $user = Auth::user();
-    
+
         $userData = [
             'name' => $user->name ?? '',
-            'address' => $user->address ?? null,  // ← addressごと渡す
+            'address' => $user->address ?? null,
             'profile_photo' => $user->profile_photo ?? null,
         ];
-    
+
         return view('mypage.profile', compact('userData'));
     }
-    
 
     public function update(Request $request)
     {
@@ -83,11 +88,9 @@ class MypageController extends Controller
 
         $user = Auth::user();
 
-
         if ($request->filled('name')) {
             $user->name = $request->name;
         }
-
 
         if ($request->hasFile('profile_photo')) {
             if ($user->profile_photo && Storage::disk('public')->exists($user->profile_photo)) {
@@ -98,7 +101,6 @@ class MypageController extends Controller
         }
 
         $user->save();
-
 
         if ($request->filled('zipcode') || $request->filled('details') || $request->filled('building')) {
             if ($user->address) {

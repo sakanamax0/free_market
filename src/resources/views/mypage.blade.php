@@ -114,14 +114,15 @@
                     <p>商品はありません。</p>
                 @else
                     <div class="item-grid">
-                        @foreach ($purchaseItems as $item)
+                         @foreach ($purchaseItems as $chatRoom)
                             <div class="item-card">
-                                <a href="{{ route('item.show', $item->id) }}">
-                                    <img src="{{ $item->image_url }}" alt="{{ $item->name }}" />
-                                    <p class="item-name">{{ $item->name }}</p>
+                                <a href="{{ route('chatroom.show', $chatRoom->id) }}">
+                                    <img src="{{ $chatRoom->item->image_url }}" alt="{{ $chatRoom->item->name }}" />
+                                    <p class="item-name">{{ $chatRoom->item->name }}</p>
                                 </a>
                             </div>
                         @endforeach
+
                     </div>
                 @endif
             </div>
