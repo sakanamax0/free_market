@@ -49,7 +49,7 @@ class ChatController extends Controller
                       ->orWhere('seller_id', $userId);
             })
             ->where('id', '!=', $chatRoomId)
-            ->where('is_purchased', false)
+            ->where('is_purchased', true)
             ->get();
 
         
