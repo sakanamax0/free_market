@@ -54,42 +54,44 @@
 
             <hr>
 
-            <div class="messages">
-                @foreach ($messages as $msg)
-                <div class="message {{ $msg->sender_id === auth()->id() ? 'mine' : 'their' }}">
-                    <div class="content-header" style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+<div class="messages">
+    @foreach ($messages as $msg)
+    <div class="message {{ $msg->sender_id === auth()->id() ? 'mine' : 'their' }}">
+        
+<div class="content-header">
+    <strong>{{ $msg->sender->name }}</strong>
+    <img
+        src="{{ $msg->sender->profile_photo 
+            ? asset('storage/' . $msg->sender->profile_photo) 
+            : asset('images/default-profile.png') }}"
+        alt="プロフィール画像">
+</div>
 
-                        <img
-                            src="{{ $msg->sender->profile_photo 
-                ? asset('storage/' . $msg->sender->profile_photo) 
-                : asset('images/default-profile.png') }}"
-                            alt="プロフィール画像"
-                            style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;">
 
-                        <strong>{{ $msg->sender->name }}</strong>
-                    </div>
+        <!-- 吹き出し本体 -->
+        <div class="content">
+            {{ $msg->content }}
 
-                    <div class="content">
-                        {{ $msg->content }}
+            @if ($msg->image_path)
+            <img src="{{ asset('storage/' . $msg->image_path) }}" alt="メッセージ画像" class="message-img" />
+            @endif
+        </div>
 
-                        @if ($msg->image_path)
-                        <img src="{{ asset('storage/' . $msg->image_path) }}" alt="メッセージ画像" class="message-img" />
-                        @endif
+        <!-- 吹き出しの外（右下）に編集・削除 -->
+        @if ($msg->sender_id === auth()->id())
+        <div class="message-actions">
+            <a href="{{ route('chat.edit', $msg->id) }}">編集</a>
+            <form method="POST" action="{{ route('chat.destroy', $msg->id) }}">
+                @csrf
+                @method('DELETE')
+                <button type="submit">削除</button>
+            </form>
+        </div>
+        @endif
+    </div>
+    @endforeach
+</div>
 
-                        @if ($msg->sender_id === auth()->id())
-                        <div class="form-actions">
-                            <a href="{{ route('chat.edit', $msg->id) }}">編集</a>
-                            <form method="POST" action="{{ route('chat.destroy', $msg->id) }}">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit">削除</button>
-                            </form>
-                        </div>
-                        @endif
-                    </div>
-                </div>
-                @endforeach
-            </div>
 
             @if ($errors->any())
             <div class="error">

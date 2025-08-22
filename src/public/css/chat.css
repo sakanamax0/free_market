@@ -90,26 +90,59 @@ body {
 }
 
 .message {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    max-width: 70%;
 }
 
 .message.mine {
+    margin-left: auto;
+    text-align: right;
+}
+
+/* ▼ ユーザー名＋アイコン部分（修正版） */
+.message .content-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    font-size: 14px;
+}
+
+/* 名前を先に */
+.message .content-header strong {
+    order: 1;
+}
+
+/* 画像を後に */
+.message .content-header img {
+    order: 2;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* 自分のメッセージ（右側）の場合は右寄せ */
+.message.mine .content-header {
     justify-content: flex-end;
+}
+
+/* 相手のメッセージ（左側）の場合は左寄せ */
+.message.their .content-header {
+    justify-content: flex-start;
 }
 
 .message .content {
     background: #eee;
     padding: 10px;
     border-radius: 10px;
-    max-width: 60%;
     word-break: break-word;
+    display: inline-block;
 }
 
 .message.mine .content {
     background: #d0f0c0;
-    text-align: right;
+    text-align: left;
 }
 
 .message img.message-img {
@@ -118,6 +151,31 @@ body {
     border-radius: 6px;
     margin-top: 5px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+/* ▼ 編集・削除リンクを吹き出し外の右下に配置 */
+.message-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    font-size: 14px;
+    margin-top: 2px;
+}
+
+.message-actions a,
+.message-actions button {
+    color: #000;
+    text-decoration: none;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.message-actions a:hover,
+.message-actions button:hover {
+    text-decoration: underline;
 }
 
 .error {
@@ -148,18 +206,19 @@ input[type="file"] {
 }
 
 .image-upload-btn {
-    background-color: #e53935;
-    color: white;
+    background-color: transparent;
+    border: 2px solid #e53935;
+    color: #e53935;
     padding: 8px 14px;
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, color 0.3s;
     display: inline-block;
 }
 
 .image-upload-btn:hover {
-    background-color: #c62828;
+    background-color: #ffe5e5;
 }
 
 .send-btn {
@@ -174,22 +233,6 @@ input[type="file"] {
 
 .send-btn:hover {
     background-color: #ffe5e5;
-}
-
-.form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 5px;
-}
-
-.form-actions a {
-    color: #2196f3;
-    text-decoration: none;
-}
-
-.form-actions a:hover {
-    text-decoration: underline;
 }
 
 @media (max-width: 768px) {
@@ -238,131 +281,13 @@ input[type="file"] {
 .user-info .username {
     font-weight: bold;
     font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 hr {
     border: none;
     border-top: 1px solid #ccc;
     margin: 10px 0;
-}
-
-.complete-btn-container {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 10px;
-}
-
-.complete-btn {
-    background-color: #ff8b8b;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    font-size: 14px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.complete-btn:hover {
-    background-color: #e87777;
-}
-
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-
-.modal.hidden {
-    display: none;
-}
-
-.modal-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.3);
-}
-
-.modal-content {
-    position: relative;
-    background-color: #fffcd4;
-    border-radius: 10px;
-    padding: 30px;
-    text-align: center;
-    z-index: 1001;
-    width: 400px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-}
-
-.modal-content h3 {
-    font-size: 20px;
-    margin-bottom: 10px;
-}
-
-.star-rating {
-    display: flex;
-    direction: rtl;
-    justify-content: center;
-    margin: 20px 0;
-}
-
-.star-rating input {
-    display: none;
-}
-
-.star-rating label {
-    cursor: pointer;
-}
-
-.star-rating .star {
-    font-size: 30px;
-    color: #ccc;
-    transition: color 0.2s;
-}
-
-.star-rating label:hover~label .star,
-.star-rating label:hover .star {
-    color: #ffc107;
-}
-
-.star-rating input:checked~label .star,
-.star-rating input:checked .star {
-    color: #ffc107;
-}
-
-.submit-rating {
-    background-color: #ff8b8b;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 14px;
-    cursor: pointer;
-}
-
-.submit-rating:hover {
-    background-color: #e87777;
-}
-
-.content-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 4px;
-}
-
-.content-header img {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    object-fit: cover;
 }
