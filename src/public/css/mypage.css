@@ -5,7 +5,7 @@ body {
     padding: 0;
 }
 
-/* ヘッダー */
+
 .header {
     background-color: #000;
     display: flex;
@@ -36,7 +36,6 @@ body {
 
 .header__search button {
     display: none;
-    /* 検索ボタンは非表示 */
 }
 
 .header__nav {
@@ -60,7 +59,7 @@ body {
     text-decoration: underline;
 }
 
-/* 出品ボタン（目立たせるデザイン） */
+
 .btn-sell {
     background-color: #fff;
     color: #000;
@@ -77,7 +76,7 @@ body {
     color: #fff;
 }
 
-/* プロフィール部分 */
+
 .profile-section {
     max-width: 1000px;
     margin: auto;
@@ -99,7 +98,13 @@ body {
     background-color: #ddd;
 }
 
-.profile-header h2 {
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.profile-info h2 {
     margin: 0;
     font-size: 20px;
     font-weight: bold;
@@ -124,10 +129,10 @@ body {
 
 .rating-score {
     display: none;
-    /* 数値は非表示 */
+
 }
 
-/* プロフィール編集ボタン */
+
 .edit-profile-btn {
     margin-left: auto;
     border: 1px solid red;
@@ -139,7 +144,7 @@ body {
     font-size: 14px;
 }
 
-/* タブ */
+
 .tabs {
     display: flex;
     gap: 40px;
@@ -157,11 +162,11 @@ body {
     padding-bottom: 5px;
 }
 
-/* 選択中タブ → 文字色だけ赤にする */
+
 .tab-link.active {
     color: red;
     font-weight: bold;
-    /* 下線は削除 */
+    
 }
 
 .tab-link .badge {
@@ -176,7 +181,7 @@ body {
     line-height: 1;
 }
 
-/* タブの中身の切替 */
+
 .tab-panel {
     display: none;
 }
@@ -185,7 +190,7 @@ body {
     display: block;
 }
 
-/* 商品グリッド */
+
 .item-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -195,24 +200,21 @@ body {
 
 .item-card {
     background-color: #f2f2f2;
-    height: 180px;
+    aspect-ratio: 1 / 1;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 6px;
     overflow: hidden;
-    /* 画像がはみ出さないように */
 }
 
 .item-card img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    /* 枠にフィットさせる */
     border-radius: 6px;
 }
 
 .item-name {
     display: none;
-    /* 商品名は非表示 */
 }

@@ -68,7 +68,7 @@
 </div>
 
 
-        <!-- 吹き出し本体 -->
+
         <div class="content">
             {{ $msg->content }}
 
@@ -77,7 +77,7 @@
             @endif
         </div>
 
-        <!-- 吹き出しの外（右下）に編集・削除 -->
+
         @if ($msg->sender_id === auth()->id())
         <div class="message-actions">
             <a href="{{ route('chat.edit', $msg->id) }}">編集</a>

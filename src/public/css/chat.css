@@ -99,7 +99,7 @@ body {
     text-align: right;
 }
 
-/* ▼ ユーザー名＋アイコン部分（修正版） */
+
 .message .content-header {
     display: flex;
     align-items: center;
@@ -108,12 +108,12 @@ body {
     font-size: 14px;
 }
 
-/* 名前を先に */
+
 .message .content-header strong {
     order: 1;
 }
 
-/* 画像を後に */
+
 .message .content-header img {
     order: 2;
     width: 30px;
@@ -122,12 +122,12 @@ body {
     object-fit: cover;
 }
 
-/* 自分のメッセージ（右側）の場合は右寄せ */
+
 .message.mine .content-header {
     justify-content: flex-end;
 }
 
-/* 相手のメッセージ（左側）の場合は左寄せ */
+
 .message.their .content-header {
     justify-content: flex-start;
 }
@@ -153,7 +153,7 @@ body {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
-/* ▼ 編集・削除リンクを吹き出し外の右下に配置 */
+
 .message-actions {
     display: flex;
     justify-content: flex-end;

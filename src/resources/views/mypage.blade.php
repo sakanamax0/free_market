@@ -49,30 +49,33 @@
                 alt="プロフィール画像" 
                 class="profile-img" 
             />
-            <h2>{{ $userData->name ?? $userData->name ?? 'ユーザー' }}</h2>
 
 
-            <div class="user-rating">
-                @php
-                    $average = $userData->averageRating();
-                    $fullStars = floor($average);
-                    $halfStar = ($average - $fullStars) >= 0.5 ? 1 : 0;
-                    $emptyStars = 5 - $fullStars - $halfStar;
-                @endphp
+            <div class="profile-info">
+                <h2>{{ $userData->name ?? 'ユーザー' }}</h2>
 
-                @for ($i = 0; $i < $fullStars; $i++)
-                    <span class="star full">&#9733;</span>
-                @endfor
+                <div class="user-rating">
+                    @php
+                        $average = $userData->averageRating();
+                        $fullStars = floor($average);
+                        $halfStar = ($average - $fullStars) >= 0.5 ? 1 : 0;
+                        $emptyStars = 5 - $fullStars - $halfStar;
+                    @endphp
 
-                @if ($halfStar)
-                    <span class="star half">&#9733;</span>
-                @endif
+                    @for ($i = 0; $i < $fullStars; $i++)
+                        <span class="star full">&#9733;</span>
+                    @endfor
 
-                @for ($i = 0; $i < $emptyStars; $i++)
-                    <span class="star empty">&#9733;</span>
-                @endfor
+                    @if ($halfStar)
+                        <span class="star half">&#9733;</span>
+                    @endif
 
-                <span class="rating-score">{{ number_format($average, 2) }} / 5</span>
+                    @for ($i = 0; $i < $emptyStars; $i++)
+                        <span class="star empty">&#9733;</span>
+                    @endfor
+
+                    <span class="rating-score">{{ number_format($average, 2) }} / 5</span>
+                </div>
             </div>
 
             <a href="{{ route('mypage.edit') }}" class="edit-profile-btn">プロフィールを編集</a>
