@@ -5,7 +5,7 @@ body {
     padding: 0;
 }
 
-
+/* ヘッダー */
 .header {
     background-color: #000;
     display: flex;
@@ -59,7 +59,6 @@ body {
     text-decoration: underline;
 }
 
-
 .btn-sell {
     background-color: #fff;
     color: #000;
@@ -76,7 +75,7 @@ body {
     color: #fff;
 }
 
-
+/* プロフィール */
 .profile-section {
     max-width: 1000px;
     margin: auto;
@@ -129,9 +128,7 @@ body {
 
 .rating-score {
     display: none;
-
 }
-
 
 .edit-profile-btn {
     margin-left: auto;
@@ -144,7 +141,7 @@ body {
     font-size: 14px;
 }
 
-
+/* タブ */
 .tabs {
     display: flex;
     gap: 40px;
@@ -158,15 +155,14 @@ body {
     color: #000;
     font-size: 16px;
     position: relative;
+    /* タブバッジ用に追加 */
     font-weight: normal;
     padding-bottom: 5px;
 }
 
-
 .tab-link.active {
     color: red;
     font-weight: bold;
-    
 }
 
 .tab-link .badge {
@@ -181,7 +177,7 @@ body {
     line-height: 1;
 }
 
-
+/* タブコンテンツ */
 .tab-panel {
     display: none;
 }
@@ -190,7 +186,7 @@ body {
     display: block;
 }
 
-
+/* 商品グリッド */
 .item-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -199,6 +195,8 @@ body {
 }
 
 .item-card {
+    position: relative;
+    /* バッジ表示用に追加 */
     background-color: #f2f2f2;
     aspect-ratio: 1 / 1;
     display: flex;
@@ -217,4 +215,17 @@ body {
 
 .item-name {
     display: none;
+}
+
+/* 商品のバッジ */
+.item-card .badge {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 50%;
+    line-height: 1;
 }

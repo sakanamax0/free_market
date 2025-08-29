@@ -17,60 +17,51 @@ class MypageController extends Controller
         $this->middleware('auth');
     }
 
-public function index()
-{
-    $user = Auth::user();
+    public function index()
+    {
+        $user = Auth::user();
 
-    $sellItems = $user->sellItems ?? collect();
+        // 出品中の商品
+        $sellItems = $user->sellItems ?? collect();
 
+        // 購入済みの商品チャット
+        $purchaseChatRooms = ChatRoom::with('item')
+            ->where('buyer_id', $user->id)
+            ->whereHas('item', function ($query) {
+                $query->where('sold_out', true);
+            })
+            ->get();
 
-    $purchaseChatRooms = ChatRoom::with('item')
-        ->where('buyer_id', $user->id)
-        ->whereHas('item', function ($query) {
-            $query->where('sold_out', true);
-        })
-        ->get();
+        // 進行中の取引チャット（未読件数をSQLで計算）
+        $ongoingChatRooms = ChatRoom::with('item')
+            ->withCount(['messages as unread_count' => function ($query) use ($user) {
+                $query->where('receiver_id', $user->id)
+                      ->where('is_read', false);
+            }])
+            ->where(function ($query) use ($user) {
+                $query->where('buyer_id', $user->id)
+                      ->orWhere('seller_id', $user->id);
+            })
+            ->where('is_purchased', true)
+            ->whereHas('item', function ($query) {
+                $query->where('sold_out', true);
+            })
+            ->get()
+            ->map(function ($room) {
+                // 最新メッセージの時間を取得
+                $room->last_message_time = $room->messages()->latest()->value('created_at') ?? $room->created_at;
+                return $room;
+            })
+            ->sortByDesc('last_message_time')
+            ->values();
 
-
-    $ongoingChatRooms = ChatRoom::with([
-            'item',
-            'messages' => function ($query) {
-                $query->latest(); 
-            }
-        ])
-        ->where(function ($query) use ($user) {
-            $query->where('buyer_id', $user->id)
-                  ->orWhere('seller_id', $user->id);
-        })
-        ->where('is_purchased', true)
-        ->whereHas('item', function ($query) {
-            $query->where('sold_out', true);
-        })
-        ->get()
-        ->map(function ($room) use ($user) {
-
-            $room->unread_count = $room->messages
-                ->where('receiver_id', $user->id)
-                ->where('is_read', false)
-                ->count();
-
-          
-            $firstMessage = $room->messages->first();
-            $room->last_message_time = $firstMessage ? $firstMessage->created_at : $room->created_at;
-
-            return $room;
-        })
-        ->sortByDesc('last_message_time')
-        ->values(); 
-
-    return view('mypage', [
-        'sellItems' => $sellItems,
-        'purchaseItems' => $purchaseChatRooms,
-        'ongoingItems' => $ongoingChatRooms,
-        'userData' => $user,
-    ]);
-}
-
+        return view('mypage', [
+            'sellItems' => $sellItems,
+            'purchaseItems' => $purchaseChatRooms,
+            'ongoingItems' => $ongoingChatRooms,
+            'userData' => $user,
+        ]);
+    }
 
     public function edit()
     {

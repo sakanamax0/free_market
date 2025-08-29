@@ -19,7 +19,7 @@ class RatingController extends Controller
             'score' => 'required|integer|min:1|max:5',
         ]);
 
-        // 重複評価の防止
+       
         $alreadyRated = Rating::where('from_user_id', auth()->id())
             ->where('to_user_id', $validated['to_user_id'])
             ->where('item_id', $validated['item_id'])
@@ -29,7 +29,7 @@ class RatingController extends Controller
             return redirect()->back()->with('error', '既に評価済みです。');
         }
 
-        // 評価を保存
+        
         Rating::create([
             'from_user_id' => auth()->id(),
             'to_user_id' => $validated['to_user_id'],
@@ -37,9 +37,9 @@ class RatingController extends Controller
             'score' => $validated['score'],
         ]);
 
-        // メール通知
+        
         $item = Item::find($validated['item_id']);
-        $seller = $item->user; // itemがuserリレーションを持っている場合
+        $seller = $item->user; 
         $toUser = User::find($validated['to_user_id']);
         if ($toUser && $toUser->email) {
             Mail::to($seller->email)->send(new PurchaseNotificationMail($item, auth()->user()->name));
