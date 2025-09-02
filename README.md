@@ -147,3 +147,13 @@ exit
 ```env
 STRIPE_SECRET=sk_test_your_test_key_here
 STRIPE_KEY=pk_test_your_test_key_here
+
+
+### テストユーザーの画像に権限付与必要な場合
+
+以下のコマンドを実行してください。
+# WSL 側ターミナルでプロジェクトのディレクトリに移動
+# storage と bootstrap/cache に書き込み権限を付与
+```bash
+sudo chmod -R 777 storage bootstrap/cache
+```
