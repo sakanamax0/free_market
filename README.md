@@ -139,7 +139,7 @@ chown -R www-data:www-data storage bootstrap/cache
 exit
 ```
 
-### Stripe（テスト決済）を利用する場合
+## Stripe（テスト決済）を利用する場合
 
 本番用やテスト用の Stripe API キーは `.env` に設定してください。  
 `.env.example` には以下のようなダミー値が入っています：
@@ -147,13 +147,16 @@ exit
 ```env
 STRIPE_SECRET=sk_test_your_test_key_here
 STRIPE_KEY=pk_test_your_test_key_here
+```
 
+---
 
 ### テストユーザーの画像に権限付与必要な場合
 
 以下のコマンドを実行してください。
+
+```bash
 # WSL 側ターミナルでプロジェクトのディレクトリに移動
 # storage と bootstrap/cache に書き込み権限を付与
-```bash
 sudo chmod -R 777 storage bootstrap/cache
 ```
