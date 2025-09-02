@@ -12,7 +12,7 @@ use App\Http\Controllers\MypageController;
 use App\Http\Controllers\SellController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ChatRoomController;
-use App\Http\Controllers\RatingController; // ← 追加
+use App\Http\Controllers\RatingController; 
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');

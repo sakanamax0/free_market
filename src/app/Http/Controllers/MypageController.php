@@ -21,10 +21,10 @@ class MypageController extends Controller
     {
         $user = Auth::user();
 
-        // 出品中の商品
+        
         $sellItems = $user->sellItems ?? collect();
 
-        // 購入済みの商品チャット
+       
         $purchaseChatRooms = ChatRoom::with('item')
             ->where('buyer_id', $user->id)
             ->whereHas('item', function ($query) {
@@ -32,7 +32,7 @@ class MypageController extends Controller
             })
             ->get();
 
-        // 進行中の取引チャット（未読件数をSQLで計算）
+      
         $ongoingChatRooms = ChatRoom::with('item')
             ->withCount(['messages as unread_count' => function ($query) use ($user) {
                 $query->where('receiver_id', $user->id)
@@ -48,11 +48,12 @@ class MypageController extends Controller
             })
             ->get()
             ->map(function ($room) {
-                // 最新メッセージの時間を取得
-                $room->last_message_time = $room->messages()->latest()->value('created_at') ?? $room->created_at;
+                // 最新メッセージがあればその時間、なければ「1970年扱い」
+                $room->last_message_time = $room->messages()->latest()->value('created_at')
+                    ?? now()->subYears(50);
                 return $room;
             })
-            ->sortByDesc('last_message_time')
+            ->sortByDesc('last_message_time') 
             ->values();
 
         return view('mypage', [

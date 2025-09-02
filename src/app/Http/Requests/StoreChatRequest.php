@@ -14,13 +14,5 @@ class StoreChatRequest extends FormRequest
     ];
 }
 
-    public function messages(): array
-{
-    return [
-        'content.required' => '本文を入力してください',
-        'content.max' => '本文は400文字以内で入力してください',
-        'image.mimes' => '「.png」または「.jpeg」形式でアップロードしてください',
-    ];
-}
 
 }
